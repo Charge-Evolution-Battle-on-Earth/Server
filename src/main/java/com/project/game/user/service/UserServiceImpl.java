@@ -1,5 +1,6 @@
 package com.project.game.user.service;
 
+import com.project.game.user.dto.UserResponse;
 import com.project.game.user.entity.User;
 import com.project.game.user.repository.UserRepository;
 import com.project.game.user.service.usecase.UserService;
@@ -13,7 +14,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User findByUserId(Long userId) {
-        return userRepository.findByUserId(userId);
+    public UserResponse findByUserId(Long userId) {
+        User user = userRepository.findByUserId(userId);
+        return new UserResponse(user);
     }
 }

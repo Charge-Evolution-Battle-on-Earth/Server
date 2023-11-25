@@ -1,5 +1,6 @@
 package com.project.game.user.controller;
 
+import com.project.game.user.dto.UserResponse;
 import com.project.game.user.entity.User;
 import com.project.game.user.service.usecase.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    private ResponseEntity<User> findById(@PathVariable Long userId) {
-        User response = userService.findByUserId(userId);
+    private ResponseEntity<UserResponse> findById(@PathVariable Long userId) {
+        UserResponse response = userService.findByUserId(userId);
         return ResponseEntity.ok(response);
     }
 }

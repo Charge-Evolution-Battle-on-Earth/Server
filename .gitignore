@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 ### custom ignore ###
-.yml
+*.yml
 
 ### STS ###
 .apt_generated

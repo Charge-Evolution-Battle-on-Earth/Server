@@ -4,10 +4,6 @@ import com.project.game.user.dto.UserLoginRequest;
 import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
-import com.project.game.user.entity.User;
-import com.project.game.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 public interface UserService {
 
@@ -18,4 +14,6 @@ public interface UserService {
     UserLoginResponse login(UserLoginRequest dto);
 
     String generateAccessToken(Long userId);
+
+    Long getUserIdByToken(String token, String secretKey);
 }

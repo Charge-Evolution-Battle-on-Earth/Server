@@ -1,4 +1,4 @@
-package com.project.game.common.util;
+package com.project.game.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

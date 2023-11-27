@@ -1,18 +1,21 @@
 package com.project.game.user.service;
 
 import static com.project.game.common.util.JwtUtil.createToken;
+import static com.project.game.common.util.JwtUtil.parse;
 import static com.project.game.common.util.ShaUtil.sha256Encode;
 import static com.project.game.user.dto.UserUpsertRequest.toEntity;
 
+import com.project.game.common.util.JwtUtil;
 import com.project.game.user.dto.UserLoginRequest;
 import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
-import com.project.game.user.entity.User;
+import com.project.game.user.domain.User;
 import com.project.game.user.repository.UserRepository;
 import com.project.game.user.service.usecase.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,10 +65,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String generateAccessToken(Long userId) {
+        Claims claims = Jwts.claims();
+        claims.put("userId",userId);
+
         return createToken(
-            (Claims) Jwts.claims().put("userId", userId),
+            claims,
             secretKey,
             accessExpiredMS
         );
+    }
+
+    @Override
+    public Long getUserIdByToken(String token, String secretKey) {
+        Claims claims = parse(token, secretKey);
+        return claims.get("userId", Long.class);
     }
 }

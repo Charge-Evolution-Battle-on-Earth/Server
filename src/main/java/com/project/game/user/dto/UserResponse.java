@@ -1,10 +1,7 @@
 package com.project.game.user.dto;
 
-import com.project.game.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Builder;
+import com.project.game.user.domain.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class UserResponse {

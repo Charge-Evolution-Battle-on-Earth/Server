@@ -1,6 +1,8 @@
-package com.project.game.character.entity;
+package com.project.game.character.domain;
 
+import com.project.game.common.domain.Stat;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "characters")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Character {
@@ -20,10 +22,11 @@ public class Character {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long characterId;
 
-    private Integer hp;
+    @Embedded
+    private Stat stat;
 
     @Builder
-    public Character(Integer hp) {
-        this.hp = hp;
+    public Character(Stat stat) {
+        this.stat = stat;
     }
 }

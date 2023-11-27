@@ -5,10 +5,8 @@ import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserLogoutRequest;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
-import com.project.game.user.entity.User;
 import com.project.game.user.service.usecase.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    private ResponseEntity<UserLoginResponse> login(HttpServletRequest request, @RequestBody UserLoginRequest dto) {
+    private ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest dto) {
         UserLoginResponse response = userService.login(dto);
         return ResponseEntity.ok(response);
     }

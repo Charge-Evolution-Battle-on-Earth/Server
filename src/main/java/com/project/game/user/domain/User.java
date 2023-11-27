@@ -1,6 +1,6 @@
-package com.project.game.user.entity;
+package com.project.game.user.domain;
 
-import com.project.game.common.util.BaseEntity;
+import com.project.game.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,11 +16,8 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
     private String email;
-
     private String password;
-
     private String nickname;
 
     @Builder

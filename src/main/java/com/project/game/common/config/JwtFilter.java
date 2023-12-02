@@ -34,19 +34,23 @@ public class JwtFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(authorization != null || authorization.startsWith("Bearer ")) {
-            String token = authorization.split(" ")[1];
-
-            if (isExpired(token, secretKey)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            Long userId = userService.getUserIdByToken(token, secretKey);
-
-            Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userId,"");
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        if(authorization == null || !authorization.startsWith("Bearer ")) {
+            filterChain.doFilter(request,response);
+            return;
         }
+
+        String token = authorization.split(" ")[1];
+
+        if (isExpired(token, secretKey)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Long userId = userService.getUserIdByToken(token, secretKey);
+
+        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userId,"");
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
         filterChain.doFilter(request,response);
     }
 }

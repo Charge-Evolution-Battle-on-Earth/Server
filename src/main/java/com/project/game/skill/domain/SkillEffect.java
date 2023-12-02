@@ -1,40 +1,44 @@
-package com.project.game.job.domain;
+package com.project.game.skill.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.game.common.domain.BaseEntity;
 import com.project.game.common.domain.Stat;
+import com.project.game.common.domain.StatRate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.math.BigDecimal;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
-@Entity(name = "jobs")
+@Entity(name = "skill_effect")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Job extends BaseEntity {
+public class SkillEffect extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long jobId;
-    @Column(nullable = false)
-    private String jobNm;
-    @Column(precision = 6, scale = 3, nullable = false)
-    private BigDecimal levelStatFactor;
+    private Long skillEffectId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "skill_id")
+    private Skill skill;
+
+    private Boolean target;
+
+    private Integer turns;
 
     @Embedded
     private Stat stat;
 
-    @Builder
-    public Job(String jobNm, BigDecimal levelStatFactor, Stat stat) {
-        this.jobNm = jobNm;
-        this.levelStatFactor = levelStatFactor;
-        this.stat = stat;
-    }
+    @Embedded
+    private StatRate statRate;
+
 }

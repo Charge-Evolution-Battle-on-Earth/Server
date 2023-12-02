@@ -2,22 +2,26 @@ package com.project.game.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Embeddable
 @Getter
-public class Stat {
+public class StatRate {
 
-
+    @Size(max = 100)
     @Column(nullable = false)
-    private Integer hp;
+    private Integer hpRate;
 
+    @Size(max = 100)
     @Column(nullable = false)
-    private Integer atk;
+    private Integer atkRate;
 
+    @Size(max = 100)
     @Column(nullable = false)
-    private Integer mp;
+    private Integer mpRate;
 
+    @Size(max = 100)
     @Column(nullable = false)
-    private Integer spd;
+    private Integer spdRate;
 }

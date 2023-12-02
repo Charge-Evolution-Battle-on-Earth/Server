@@ -27,8 +27,9 @@ public class AuthenticationConfig {
             )
             .authorizeHttpRequests((auth) ->
                 auth
-                    .requestMatchers("/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/users/**").permitAll()
+                    .anyRequest().permitAll()
+                //.anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -19,12 +19,16 @@ public class Skill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillId;
+
     @Column(nullable = false)
     private Long levelId;
+
     @Column(nullable = false)
     private Long nationId;
+
     @Column(nullable = false)
     private String skillNm;
+
     private String description;
 
     @Builder

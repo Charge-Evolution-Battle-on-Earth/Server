@@ -3,8 +3,6 @@ package com.project.game.skill.dto;
 import com.project.game.common.domain.Stat;
 import com.project.game.common.domain.StatRate;
 import com.project.game.skill.domain.SkillEffect;
-import jakarta.persistence.Embedded;
-import java.util.List;
 import lombok.Getter;
 
 @Getter

@@ -8,9 +8,9 @@ import com.project.game.job.dto.JobUpsertRequest;
 import com.project.game.job.dto.JobUpsertResponse;
 import com.project.game.job.repository.JobRepository;
 import com.project.game.job.service.usecase.JobService;
-import com.project.game.nation.dto.NationUpsertResponse;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,12 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
 
     @Override
-    public JobGetListResponse getJobList() {
+    public List<JobGetListResponse> getJobList() {
         List<Job> jobs = jobRepository.findAll();
-        return new JobGetListResponse(jobs);
+        List<JobGetListResponse> jobResponseList = jobs.stream().map(
+            job -> new JobGetListResponse(job)
+        ).collect(Collectors.toList());
+        return jobResponseList;
     }
 
     @Override

@@ -21,8 +21,10 @@ public class Nation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nationId;
+
     @Column(nullable = false)
     private String nationNm;
+
     @Column(precision = 6, scale = 3, nullable = false)
     private BigDecimal levelStatFactor;
 

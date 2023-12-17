@@ -21,8 +21,8 @@ public class SkillController {
     private final SkillEffectService skillEffectService;
 
     @GetMapping
-    private ResponseEntity<SkillGetListResponse> findAllSkills() {
-        SkillGetListResponse response = skillService.getSkillList();
+    private ResponseEntity<List<SkillGetListResponse>> findAllSkills() {
+        List<SkillGetListResponse> response = skillService.getSkillList();
         return ResponseEntity.ok(response);
     }
 

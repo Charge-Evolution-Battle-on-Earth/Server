@@ -4,6 +4,7 @@ import com.project.game.nation.dto.NationGetListResponse;
 import com.project.game.nation.dto.NationUpsertRequest;
 import com.project.game.nation.dto.NationUpsertResponse;
 import com.project.game.nation.service.usecase.NationService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +21,8 @@ public class NationController {
     private final NationService nationService;
 
     @GetMapping
-    private ResponseEntity<NationGetListResponse> findAllNations() {
-        NationGetListResponse response = nationService.getNationList();
+    private ResponseEntity<List<NationGetListResponse>> findAllNations() {
+        List<NationGetListResponse> response = nationService.getNationList();
         return ResponseEntity.ok(response);
     }
 

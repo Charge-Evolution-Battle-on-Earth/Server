@@ -23,8 +23,10 @@ public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long jobId;
+
     @Column(nullable = false)
     private String jobNm;
+
     @Column(precision = 6, scale = 3, nullable = false)
     private BigDecimal levelStatFactor;
 

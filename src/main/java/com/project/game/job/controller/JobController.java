@@ -4,6 +4,7 @@ import com.project.game.job.dto.JobGetListResponse;
 import com.project.game.job.dto.JobUpsertRequest;
 import com.project.game.job.dto.JobUpsertResponse;
 import com.project.game.job.service.usecase.JobService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +21,8 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping
-    private ResponseEntity<JobGetListResponse> findAllJobs() {
-        JobGetListResponse response = jobService.getJobList();
+    private ResponseEntity<List<JobGetListResponse>> findAllJobs() {
+        List<JobGetListResponse> response = jobService.getJobList();
         return ResponseEntity.ok(response);
     }
 

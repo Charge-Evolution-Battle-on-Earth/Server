@@ -10,6 +10,7 @@ import com.project.game.nation.repository.NationRepository;
 import com.project.game.nation.service.usecase.NationService;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,12 @@ public class NationServiceImpl implements NationService {
     private final NationRepository nationRepository;
 
     @Override
-    public NationGetListResponse getNationList() {
+    public List<NationGetListResponse> getNationList() {
         List<Nation> nations = nationRepository.findAll();
-        return new NationGetListResponse(nations);
+        List<NationGetListResponse> nationResponseList = nations.stream().map(
+            nation -> new NationGetListResponse(nation)
+        ).collect(Collectors.toList());
+        return nationResponseList;
     }
 
     @Override

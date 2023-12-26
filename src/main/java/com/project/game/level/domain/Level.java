@@ -15,7 +15,9 @@ public class Level extends BaseEntity {
 
     @Id
     private Integer levelId;
+
     private Integer needExp;
+
     private Integer rewardGold;
 
     @Builder

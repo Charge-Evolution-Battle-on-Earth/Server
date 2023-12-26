@@ -33,13 +33,5 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    /*
-     * 인벤토리 조회
-     * TODO 추후 작업 예정
-     */
-    @GetMapping("/{itemTypeId}/{levelId}/{jobId}")
-    private void findItemOnInventory() {
-    }
-
 }
 

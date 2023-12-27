@@ -18,6 +18,8 @@ public class CharacterInfoGetResponse {
 
     private Job job;
 
+    private Integer money;
+
     private Integer exp;
 
     private String imageUrl;
@@ -27,6 +29,7 @@ public class CharacterInfoGetResponse {
         this.levelId = character.getLevelId();
         this.nation = character.getNation();
         this.job = character.getJob();
+        this.money = character.getMoney();
         this.exp = character.getExp();
         this.imageUrl = character.getImageUrl();
     }

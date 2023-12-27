@@ -47,9 +47,11 @@ public class Item extends BaseEntity {
 
     private String description;
 
+    private String imageUrl;
+
     @Builder
     public Item(Long levelId, Job job, ItemType itemType, String itemNm, Integer cost, Stat stat,
-        String description) {
+        String description, String imageUrl) {
         this.levelId = levelId;
         this.job = job;
         this.itemType = itemType;
@@ -57,5 +59,6 @@ public class Item extends BaseEntity {
         this.cost = cost;
         this.stat = stat;
         this.description = description;
+        this.imageUrl = imageUrl;
     }
 }

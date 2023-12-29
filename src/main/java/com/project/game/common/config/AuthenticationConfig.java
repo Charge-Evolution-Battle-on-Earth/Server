@@ -28,7 +28,8 @@ public class AuthenticationConfig {
             .authorizeHttpRequests((auth) ->
                 auth
                     .requestMatchers("/users/**").permitAll()
-                    //.requestMatchers("/items/**").permitAll()
+                    .requestMatchers("/index.html").permitAll() //websocket 테스트 용
+                    .requestMatchers("/play/**").permitAll()   //stomp 요청 허용
                     //.anyRequest().permitAll()
                 .anyRequest().authenticated()
             )

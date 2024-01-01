@@ -11,6 +11,8 @@ import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
 import com.project.game.user.domain.User;
+import com.project.game.user.exception.UserInvalidException;
+import com.project.game.user.exception.UserNotFoundException;
 import com.project.game.user.repository.UserRepository;
 import com.project.game.user.service.usecase.UserService;
 import io.jsonwebtoken.Claims;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByEmail(dto.getEmail());
 
         if(user.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "중복 아이디(이메일) 입니다.");
+            throw new UserInvalidException();
         }
 
         User savedUser = userRepository.save(toEntity(dto));
@@ -57,7 +59,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> loginUser = userRepository.findByEmailAndPassword(dto.getEmail(), sha256Encode(dto.getPassword()));
 
         if(loginUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "로그인 실패하였습니다.");
+            throw new UserNotFoundException();
         }
 
         return new UserLoginResponse(generateAccessToken(loginUser.get().getUserId()));

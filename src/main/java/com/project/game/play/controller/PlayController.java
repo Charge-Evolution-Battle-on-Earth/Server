@@ -12,6 +12,7 @@ public class PlayController {
 
     @MessageMapping("TTT")
     @SendTo("/topic/message")
+    // TODO: remove
     public String greeting(String message){
         return "test";
     }

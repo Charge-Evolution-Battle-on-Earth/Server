@@ -2,6 +2,7 @@ package com.project.game.character.domain;
 
 import static org.hibernate.type.descriptor.java.IntegerJavaType.ZERO;
 
+import com.project.game.character.exception.CostInvalidException;
 import com.project.game.job.domain.Job;
 import com.project.game.nation.domain.Nation;
 import com.project.game.user.domain.User;
@@ -52,14 +53,14 @@ public class Character {
 
     public void plusMoney(Integer cost){
         if(validateCost(cost)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 Cost 입력입니다.");
+            throw new CostInvalidException(cost);
         }
         this.money += cost;
     }
 
     public void minusMoney(Integer cost){
         if(validateCost(cost) || this.money.compareTo(cost) == -1){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 Cost 입력입니다.");
+            throw new CostInvalidException(cost);
         }
         this.money -= cost;
     }

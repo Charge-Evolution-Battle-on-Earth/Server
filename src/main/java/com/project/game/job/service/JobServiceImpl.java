@@ -6,6 +6,7 @@ import com.project.game.job.domain.Job;
 import com.project.game.job.dto.JobGetListResponse;
 import com.project.game.job.dto.JobUpsertRequest;
 import com.project.game.job.dto.JobUpsertResponse;
+import com.project.game.job.exception.JobInvalidException;
 import com.project.game.job.repository.JobRepository;
 import com.project.game.job.service.usecase.JobService;
 import java.util.List;
@@ -36,7 +37,7 @@ public class JobServiceImpl implements JobService {
         Optional<Job> findNation = jobRepository.findByJobNm(dto.getJobNm());
 
         if(findNation.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "중복된 직업 입력입니다.");
+            throw new JobInvalidException();
         }
         Job job = jobRepository.save(toEntity(dto));
         return new JobUpsertResponse(job);

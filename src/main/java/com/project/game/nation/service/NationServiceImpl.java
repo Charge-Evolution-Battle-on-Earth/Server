@@ -6,6 +6,7 @@ import com.project.game.nation.dto.NationGetListResponse;
 import com.project.game.nation.domain.Nation;
 import com.project.game.nation.dto.NationUpsertRequest;
 import com.project.game.nation.dto.NationUpsertResponse;
+import com.project.game.nation.exception.NationInvalidException;
 import com.project.game.nation.repository.NationRepository;
 import com.project.game.nation.service.usecase.NationService;
 import java.util.List;
@@ -36,7 +37,7 @@ public class NationServiceImpl implements NationService {
         Optional<Nation> findNation = nationRepository.findByNationNm(dto.getNationNm());
 
         if(findNation.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "중복된 나라 입력입니다.");
+            throw new NationInvalidException();
         }
         Nation nation = nationRepository.save(toEntity(dto));
         return new NationUpsertResponse(nation);

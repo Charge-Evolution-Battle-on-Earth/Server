@@ -1,1 +1,1 @@
-Charge Evolution Battle on Earth
+Charge Evolution Battle on Earth Server

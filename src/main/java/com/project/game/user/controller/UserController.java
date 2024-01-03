@@ -5,7 +5,7 @@ import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserLogoutRequest;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
-import com.project.game.user.service.usecase.UserService;
+import com.project.game.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

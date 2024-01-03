@@ -5,7 +5,8 @@ import static com.project.game.common.util.JwtUtil.parse;
 import static com.project.game.common.util.ShaUtil.sha256Encode;
 import static com.project.game.user.dto.UserUpsertRequest.toEntity;
 
-import com.project.game.common.util.JwtUtil;
+import com.project.game.character.domain.Character;
+import com.project.game.character.repository.CharacterRepository;
 import com.project.game.user.dto.UserLoginRequest;
 import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserResponse;
@@ -14,22 +15,20 @@ import com.project.game.user.domain.User;
 import com.project.game.user.exception.UserInvalidException;
 import com.project.game.user.exception.UserNotFoundException;
 import com.project.game.user.repository.UserRepository;
-import com.project.game.user.service.usecase.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final CharacterRepository characterRepository;
+
     @Value("${jwt.secret}")
     private String secretKey;
     @Value("${jwt.access-expired-ms}")
@@ -56,19 +55,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginResponse login(UserLoginRequest dto) {
-        Optional<User> loginUser = userRepository.findByEmailAndPassword(dto.getEmail(), sha256Encode(dto.getPassword()));
+        User loginUser = userRepository.findByEmailAndPassword(dto.getEmail(), sha256Encode(dto.getPassword())).orElseThrow(()-> new UserNotFoundException());
 
-        if(loginUser.isEmpty()){
-            throw new UserNotFoundException();
-        }
+        Character character = characterRepository.findByUserUserId(loginUser.getUserId());
 
-        return new UserLoginResponse(generateAccessToken(loginUser.get().getUserId()));
+        return new UserLoginResponse(generateAccessToken(character.getCharacterId()));
     }
 
     @Override
-    public String generateAccessToken(Long userId) {
+    public String generateAccessToken(Long characterId) {
         Claims claims = Jwts.claims();
-        claims.put("userId",userId);
+        claims.put("characterId",characterId);
 
         return createToken(
             claims,
@@ -78,8 +75,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long getUserIdByToken(String token, String secretKey) {
+    public Long getCharacterIdByToken(String token, String secretKey) {
         Claims claims = parse(token, secretKey);
-        return claims.get("userId", Long.class);
+        return claims.get("characterId", Long.class);
     }
 }

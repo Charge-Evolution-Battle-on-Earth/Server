@@ -1,4 +1,4 @@
-package com.project.game.user.service.usecase;
+package com.project.game.user.service;
 
 import com.project.game.user.dto.UserLoginRequest;
 import com.project.game.user.dto.UserLoginResponse;
@@ -15,5 +15,5 @@ public interface UserService {
 
     String generateAccessToken(Long userId);
 
-    Long getUserIdByToken(String token, String secretKey);
+    Long getCharacterIdByToken(String token, String secretKey);
 }

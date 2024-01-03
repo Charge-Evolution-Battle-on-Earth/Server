@@ -1,4 +1,4 @@
-package com.project.game.item.service.usecase;
+package com.project.game.item.service;
 
 import com.project.game.item.dto.ItemBuyRequest;
 import com.project.game.item.dto.ItemBuyResponse;

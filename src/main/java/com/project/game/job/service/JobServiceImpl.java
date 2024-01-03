@@ -8,14 +8,11 @@ import com.project.game.job.dto.JobUpsertRequest;
 import com.project.game.job.dto.JobUpsertResponse;
 import com.project.game.job.exception.JobInvalidException;
 import com.project.game.job.repository.JobRepository;
-import com.project.game.job.service.usecase.JobService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor

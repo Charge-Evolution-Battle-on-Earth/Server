@@ -35,7 +35,7 @@ public class Character {
     private User user;
 
     @Column(name = "level_id")
-    private Long levelId;
+    private Integer levelId;
 
     @OneToOne
     @JoinColumn(name = "nation_id")
@@ -70,7 +70,7 @@ public class Character {
     }
 
     @Builder
-    public Character(Long characterId, User user, Long levelId, Nation nation, Job job, Integer money, Integer exp,
+    public Character(Long characterId, User user, Integer levelId, Nation nation, Job job, Integer money, Integer exp,
         String imageUrl) {
         this.characterId = characterId;
         this.user = user;

@@ -1,4 +1,4 @@
-package com.project.game.nation.service.usecase;
+package com.project.game.nation.service;
 
 import com.project.game.nation.dto.NationGetListResponse;
 import com.project.game.nation.dto.NationUpsertRequest;

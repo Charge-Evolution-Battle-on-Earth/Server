@@ -2,8 +2,8 @@ package com.project.game.skill.controller;
 
 import com.project.game.skill.dto.SkillEffectGetListResponse;
 import com.project.game.skill.dto.SkillGetListResponse;
-import com.project.game.skill.service.usecase.SkillEffectService;
-import com.project.game.skill.service.usecase.SkillService;
+import com.project.game.skill.service.SkillEffectService;
+import com.project.game.skill.service.SkillService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -3,7 +3,6 @@ package com.project.game.skill.service;
 import com.project.game.skill.domain.SkillEffect;
 import com.project.game.skill.dto.SkillEffectGetListResponse;
 import com.project.game.skill.repository.SkillEffectRepository;
-import com.project.game.skill.service.usecase.SkillEffectService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

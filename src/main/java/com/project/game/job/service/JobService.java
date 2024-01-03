@@ -1,4 +1,4 @@
-package com.project.game.job.service.usecase;
+package com.project.game.job.service;
 
 import com.project.game.job.dto.JobGetListResponse;
 import com.project.game.job.dto.JobUpsertRequest;

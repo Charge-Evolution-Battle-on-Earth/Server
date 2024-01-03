@@ -3,7 +3,7 @@ package com.project.game.common.config;
 import static com.project.game.common.util.JwtUtil.isExpired;
 
 import com.google.common.net.HttpHeaders;
-import com.project.game.user.service.usecase.UserService;
+import com.project.game.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,9 +45,9 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        Long userId = userService.getUserIdByToken(token, secretKey);
+        Long characterId = userService.getCharacterIdByToken(token, secretKey);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userId,null,
+        Authentication authentication = new UsernamePasswordAuthenticationToken(characterId,null,
             Collections.singleton(new SimpleGrantedAuthority("USER")));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

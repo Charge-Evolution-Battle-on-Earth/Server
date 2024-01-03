@@ -1,4 +1,4 @@
-package com.project.game.level.service.usecase;
+package com.project.game.level.service;
 
 import com.project.game.level.dto.LevelUpResponse;
 

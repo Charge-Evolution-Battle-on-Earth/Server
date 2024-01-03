@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CharacterItemEquipRepository extends JpaRepository<CharacterItemEquip, Long> {
 
     Optional<CharacterItemEquip> findByCharacterCharacterIdAndItemTypeItemTypeId(Long characterId, Long itemTypeId);
+
+    List<CharacterItemEquip> findByCharacterCharacterId(Long characterId);
 }

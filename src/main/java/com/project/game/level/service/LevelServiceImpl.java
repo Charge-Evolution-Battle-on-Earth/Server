@@ -4,12 +4,9 @@ import com.project.game.level.dto.LevelUpResponse;
 import com.project.game.level.domain.Level;
 import com.project.game.level.exception.LevelInvalidException;
 import com.project.game.level.repository.LevelRepository;
-import com.project.game.level.service.usecase.LevelService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor

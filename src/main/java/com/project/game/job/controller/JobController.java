@@ -3,7 +3,7 @@ package com.project.game.job.controller;
 import com.project.game.job.dto.JobGetListResponse;
 import com.project.game.job.dto.JobUpsertRequest;
 import com.project.game.job.dto.JobUpsertResponse;
-import com.project.game.job.service.usecase.JobService;
+import com.project.game.job.service.JobService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

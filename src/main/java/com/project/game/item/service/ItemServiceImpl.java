@@ -8,7 +8,6 @@ import com.project.game.character.exception.CharacterNotFoundException;
 import com.project.game.character.repository.CharacterItemEquipRepository;
 import com.project.game.character.repository.CharacterItemRepository;
 import com.project.game.character.repository.CharacterRepository;
-import com.project.game.common.exception.EntityNotFoundException;
 import com.project.game.item.domain.Item;
 import com.project.game.item.domain.ItemType;
 import com.project.game.item.dto.ItemBuyRequest;
@@ -25,15 +24,12 @@ import com.project.game.item.exception.ItemTypeInvalidException;
 import com.project.game.item.exception.ItemTypeNotFoundException;
 import com.project.game.item.repository.ItemRepository;
 import com.project.game.item.repository.ItemTypeRepository;
-import com.project.game.item.service.usecase.ItemService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor

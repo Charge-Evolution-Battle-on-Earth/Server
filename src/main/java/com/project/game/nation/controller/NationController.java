@@ -3,7 +3,7 @@ package com.project.game.nation.controller;
 import com.project.game.nation.dto.NationGetListResponse;
 import com.project.game.nation.dto.NationUpsertRequest;
 import com.project.game.nation.dto.NationUpsertResponse;
-import com.project.game.nation.service.usecase.NationService;
+import com.project.game.nation.service.NationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

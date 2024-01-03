@@ -9,7 +9,7 @@ import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
 import com.project.game.item.dto.ItemSellResponse;
 import com.project.game.item.dto.ItemUnEquipRequest;
-import com.project.game.item.service.usecase.ItemService;
+import com.project.game.item.service.ItemService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

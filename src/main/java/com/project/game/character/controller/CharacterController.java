@@ -34,10 +34,4 @@ public class CharacterController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/level-up")
-    private ResponseEntity<List<CharacterSkillGetResponse>> levelUp(@AuthenticationPrincipal Long characterId){
-        List<CharacterSkillGetResponse> response = characterService.getCharacterSkills(characterId);
-        return ResponseEntity.ok(response);
-    }
-
 }

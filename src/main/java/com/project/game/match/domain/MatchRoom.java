@@ -1,8 +1,14 @@
 package com.project.game.match.domain;
 
+import static jakarta.persistence.FetchType.LAZY;
+
+import com.project.game.character.domain.Character;
 import com.project.game.common.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,14 +29,15 @@ public class MatchRoom extends BaseEntity {
     @Column(name = "match_room_id")
     private Long matchRoomId;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "creator")
     private Character creator;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "entrant")
     private Character entrant;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "match_status")
     private MatchStatus matchStatus;
 

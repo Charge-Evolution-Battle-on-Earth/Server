@@ -1,5 +1,6 @@
 package com.project.game.character.domain;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static org.hibernate.type.descriptor.java.IntegerJavaType.ZERO;
 
 import com.project.game.character.exception.CostInvalidException;
@@ -8,6 +9,7 @@ import com.project.game.nation.domain.Nation;
 import com.project.game.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,18 +32,18 @@ public class Character {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long characterId;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "level_id")
     private Integer levelId;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "nation_id")
     private Nation nation;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 

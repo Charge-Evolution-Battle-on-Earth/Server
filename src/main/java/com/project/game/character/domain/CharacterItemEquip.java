@@ -1,5 +1,7 @@
 package com.project.game.character.domain;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 import com.project.game.common.domain.BaseEntity;
 import com.project.game.item.domain.Item;
 import com.project.game.item.domain.ItemType;
@@ -25,15 +27,15 @@ public class CharacterItemEquip extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long characterItemEquipId;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name="character_id")
     private Character character;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name="item_type_id")
     private ItemType itemType;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name="character_item_id")
     private CharacterItem characterItem;
 

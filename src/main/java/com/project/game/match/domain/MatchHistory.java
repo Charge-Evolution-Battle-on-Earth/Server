@@ -1,5 +1,8 @@
 package com.project.game.match.domain;
 
+import static jakarta.persistence.FetchType.LAZY;
+
+import com.project.game.character.domain.Character;
 import com.project.game.common.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,15 +26,15 @@ public class MatchHistory extends BaseEntity {
     @Column(name = "match_history_id")
     private Long matchHistoryId;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name="match_room_id")
     private MatchRoom matchRoom;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "winner")
     private Character winner;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "loser")
     private Character loser;
 

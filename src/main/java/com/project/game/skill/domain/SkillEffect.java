@@ -1,20 +1,18 @@
 package com.project.game.skill.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import static jakarta.persistence.FetchType.LAZY;
+
 import com.project.game.common.domain.BaseEntity;
 import com.project.game.common.domain.Stat;
 import com.project.game.common.domain.StatRate;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +25,7 @@ public class SkillEffect extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long skillEffectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "skill_id")
     private Skill skill;
 

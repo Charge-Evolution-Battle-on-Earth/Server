@@ -1,5 +1,7 @@
 package com.project.game.item.domain;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 import com.project.game.common.domain.BaseEntity;
 import com.project.game.common.domain.Stat;
 import com.project.game.job.domain.Job;
@@ -30,11 +32,11 @@ public class Item extends BaseEntity {
     @Column(name = "level_id")
     private Long levelId;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "item_type_id")
     private ItemType itemType;
 

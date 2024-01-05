@@ -1,10 +1,13 @@
 package com.project.game.user.controller;
 
+import com.project.game.user.dto.UserCharacterUpsertRequest;
+import com.project.game.user.dto.UserCharacterUpsertResponse;
 import com.project.game.user.dto.UserLoginRequest;
 import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserLogoutRequest;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
+import com.project.game.user.dto.UserUpsertResponse;
 import com.project.game.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +34,14 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    private ResponseEntity<UserResponse> join(@RequestBody UserUpsertRequest dto) {
-        UserResponse response = userService.join(dto);
+    private ResponseEntity<UserUpsertResponse> join(@RequestBody UserUpsertRequest dto) {
+        UserUpsertResponse response = userService.join(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/character")
+    private ResponseEntity<UserCharacterUpsertResponse> joinCharacter(@RequestBody UserCharacterUpsertRequest dto) {
+        UserCharacterUpsertResponse response = userService.joinCharacter(dto);
         return ResponseEntity.ok(response);
     }
 

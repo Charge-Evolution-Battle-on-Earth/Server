@@ -3,6 +3,7 @@ package com.project.game.common.advice;
 import com.project.game.common.dto.ErrorResponse;
 import com.project.game.common.exception.EntityNotFoundException;
 import com.project.game.common.exception.ValueInvalidException;
+import com.project.game.match.exception.MatchRoomFullException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,5 +26,13 @@ public class ExceptionAdvice {
     @ExceptionHandler(ValueInvalidException.class)
     public ResponseEntity<ErrorResponse> valueInvalidExceptionHandler(ValueInvalidException exception){
         return new ResponseEntity<>(new ErrorResponse(exception), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * [MatchRoomFullException] 발생 시 403 FORBIDDEN 응답
+     */
+    @ExceptionHandler(MatchRoomFullException.class)
+    public ResponseEntity<ErrorResponse> matchRoomFullExceptionHandler(MatchRoomFullException exception){
+        return new ResponseEntity<>(new ErrorResponse(exception), HttpStatus.FORBIDDEN);
     }
 }

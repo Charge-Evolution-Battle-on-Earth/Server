@@ -14,15 +14,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name = "match_room")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatchRoom extends BaseEntity {
+
+    @Transient
+    private static final Integer defaultStakedGold = 100;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +48,14 @@ public class MatchRoom extends BaseEntity {
 
     @Column(name = "staked_gold")
     private Integer stakedGold;
+
+    public static Integer makeStakedGold(Integer level){
+        return defaultStakedGold * level;
+    }
+
+    public void setEntrant(Character entrant){
+        this.entrant = entrant;
+    }
 
     @Builder
     public MatchRoom(Character creator, Character entrant, MatchStatus matchStatus,

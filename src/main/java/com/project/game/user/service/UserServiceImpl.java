@@ -101,11 +101,8 @@ public class UserServiceImpl implements UserService {
 
         Character character = Character.builder()
             .user(user)
-            .levelId(1)
             .nation(nation)
             .job(job)
-            .money(0)
-            .exp(0)
             .build();
 
         Character savedCharacter = characterRepository.saveAndFlush(character);

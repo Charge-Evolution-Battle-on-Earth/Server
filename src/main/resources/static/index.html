@@ -58,9 +58,9 @@ $(document).ready(  function() {
 
         let msg = $('input#msg').val();
         console.log("mmmmmmmmmmmm>>", msg)
-        let apiUrl = '/ready/' + msg
+        let apiUrl = '/ready/' + 7
         if (isStomp)
-        	socket.send(apiUrl, {}, JSON.stringify({matchId: '10', readyStatus: false}));
+        	socket.send(apiUrl, {}, JSON.stringify({matchId: '7', creatorReadyStatus: false, entrantReadyStatus: false}));
         else
             socket.send(msg);
     });
@@ -68,6 +68,9 @@ $(document).ready(  function() {
 
 var socket = null;
 var isStomp = false;
+var authHeaders = {
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjaGFyYWN0ZXJJZCI6NywiaWF0IjoxNzA0NTY0MDAwLCJleHAiOjE3MDQ1Njc2MDB9.nZjGNX38HnrmMdSFTsS25FszOd2YC6xm9lnrK0FJY5g'
+};
 
 function connectStomp() {
 	var sock = new SockJS("/play"); // endpoint
@@ -75,16 +78,18 @@ function connectStomp() {
 	isStomp = true;
 	socket = client;
 
-    client.connect({}, function () {
+    client.connect(authHeaders, function () {
         console.log("Connected stompTest!");
         // Controller's MessageMapping, header, message(자유형식)
         client.send('/TTT', {}, "msg: Haha~~~");
 
         // 해당 토픽을 구독한다!
-        client.subscribe('/topic/1/message', function (event) {
+        client.subscribe('/topic/7/message', function (event) {
             console.log("topic 발행", event)
         });
-    });
+    }, {
+    withCredentials: true  // 인증 헤더를 전송하도록 설정
+  });
 
 }
 

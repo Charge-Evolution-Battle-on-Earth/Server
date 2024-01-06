@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,15 @@ import org.springframework.web.server.ResponseStatusException;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Character {
+
+    @Transient
+    private static final Integer INITIAL_EXP = 0;
+
+    @Transient
+    private static final Integer INITIAL_MONEY = 0;
+
+    @Transient
+    private static final Integer INITIAL_LEVEL = 1;
 
     @Id
     @Column(name = "character_id")
@@ -72,15 +82,14 @@ public class Character {
     }
 
     @Builder
-    public Character(Long characterId, User user, Integer levelId, Nation nation, Job job, Integer money, Integer exp,
-        String imageUrl) {
+    public Character(Long characterId, User user, Nation nation, Job job, String imageUrl) {
         this.characterId = characterId;
         this.user = user;
-        this.levelId = levelId;
+        this.levelId = INITIAL_LEVEL;
         this.nation = nation;
         this.job = job;
-        this.money = money;
-        this.exp = exp;
+        this.money = INITIAL_MONEY;
+        this.exp = INITIAL_EXP;
         this.imageUrl = imageUrl;
     }
 }

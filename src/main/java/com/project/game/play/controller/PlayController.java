@@ -1,27 +1,34 @@
 package com.project.game.play.controller;
 
+import static com.project.game.common.util.SimpMessageHeaderAccessorUtil.extractCharacterIdFromAccessor;
+
+import com.project.game.match.service.MatchService;
 import com.project.game.play.dto.PlayReadyRequest;
 import com.project.game.play.dto.PlayReadyResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class PlayController {
 
-    @MessageMapping("TTT")
-    @SendTo("/topic/message")
-    // TODO: remove
-    public String greeting(String message){
-        return "test";
+    private final MatchService matchService;
+
+    @MessageMapping("/enter/{matchId}")
+    @SendTo("/topic/{matchId}/message")
+    private PlayReadyResponse enter(@DestinationVariable String matchId, PlayReadyRequest playReadyRequest){
+        return null;
     }
 
     @MessageMapping("ready/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    public PlayReadyResponse ready(@DestinationVariable String matchId, PlayReadyRequest playReadyRequest){
-        System.out.println("matchId = " + matchId + ", playReadyRequest = " + playReadyRequest);
-        System.out.println(playReadyRequest.getReadyStatus() + playReadyRequest.getMatchId());
-        return new PlayReadyResponse(playReadyRequest.getMatchId(), !playReadyRequest.getReadyStatus(),true);
+    private PlayReadyResponse ready(@DestinationVariable String matchId, PlayReadyRequest playReadyRequest,  SimpMessageHeaderAccessor accessor){
+        Long characterId = extractCharacterIdFromAccessor(accessor);
+        PlayReadyResponse response = matchService.ready(characterId, Long.parseLong(matchId), playReadyRequest);
+        return response;
     }
 }

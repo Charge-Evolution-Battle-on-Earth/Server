@@ -2,13 +2,13 @@ package com.project.game.match.exception;
 
 import com.project.game.common.exception.ValueInvalidException;
 
-public class InvalidLevelDifferenceException extends ValueInvalidException {
+public class LevelDifferenceInvalidException extends ValueInvalidException {
 
-    public InvalidLevelDifferenceException() {
+    public LevelDifferenceInvalidException() {
         super("Too many Level Difference");
     }
 
-    public InvalidLevelDifferenceException(Integer difference) {
+    public LevelDifferenceInvalidException(Integer difference) {
         super("Too many Level Difference: " + difference);
     }
 }

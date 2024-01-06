@@ -5,8 +5,12 @@ import static jakarta.persistence.FetchType.LAZY;
 import com.project.game.common.domain.BaseEntity;
 import com.project.game.common.domain.Stat;
 import com.project.game.common.domain.StatRate;
+import com.project.game.skill.vo.SkillEffectType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,12 +33,15 @@ public class SkillEffect extends BaseEntity {
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
-    private Boolean target;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "skill_effect_type")
+    private SkillEffectType skillEffectType;
 
-    private Integer turns;
+    @Column(name = "mana_cost")
+    private Integer manaCost;
 
-    @Embedded
-    private Stat stat;
+    @Column(name = "fixed_value")
+    private Integer fixedValue;
 
     @Embedded
     private StatRate statRate;

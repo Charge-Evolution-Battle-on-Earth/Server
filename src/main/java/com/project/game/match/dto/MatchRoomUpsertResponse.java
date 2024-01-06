@@ -1,8 +1,7 @@
 package com.project.game.match.dto;
 
-import com.project.game.character.domain.Character;
 import com.project.game.match.domain.MatchRoom;
-import com.project.game.match.domain.MatchStatus;
+import com.project.game.match.vo.MatchStatus;
 import lombok.Getter;
 
 @Getter

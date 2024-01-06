@@ -1,14 +1,16 @@
 package com.project.game.match.domain;
 
+import static com.project.game.match.vo.PlayerType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 import com.project.game.character.domain.Character;
 import com.project.game.common.domain.BaseEntity;
+import com.project.game.match.vo.MatchStatus;
+import com.project.game.match.vo.PlayerType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +21,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name = "match_room")
 @Getter
@@ -49,12 +50,28 @@ public class MatchRoom extends BaseEntity {
     @Column(name = "staked_gold")
     private Integer stakedGold;
 
+    /**
+     * 게임 승리 시 획득 Gold
+     * 기본 금액 * level
+     * @param level
+     * @return
+     */
     public static Integer makeStakedGold(Integer level){
         return defaultStakedGold * level;
     }
 
     public void setEntrant(Character entrant){
         this.entrant = entrant;
+    }
+
+    public PlayerType getPlayerType(Long characterId){
+        if(this.creator.getCharacterId() == characterId) return CREATOR;
+        else if(this.entrant.getCharacterId() == characterId) return ENTRANT;
+        else return NONE;
+    }
+
+    public void setMatchStatus(MatchStatus matchStatus){
+        this.matchStatus = matchStatus;
     }
 
     @Builder

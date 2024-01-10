@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class PlayReadyResponse {
 
-    Boolean creatorReadyStatus;    //true:준비완료, false:준비 미완료
+    Boolean hostReadyStatus;    //true:준비완료, false:준비 미완료
     Boolean entrantReadyStatus;    //true:준비완료, false:준비 미완료
     MatchStatus matchStatus;
 
-    public PlayReadyResponse(Boolean creatorReadyStatus, Boolean entrantReadyStatus, MatchStatus matchStatus) {
-        this.creatorReadyStatus = creatorReadyStatus;
+    public PlayReadyResponse(Boolean hostReadyStatus, Boolean entrantReadyStatus, MatchStatus matchStatus) {
+        this.hostReadyStatus = hostReadyStatus;
         this.entrantReadyStatus = entrantReadyStatus;
         this.matchStatus = matchStatus;
     }

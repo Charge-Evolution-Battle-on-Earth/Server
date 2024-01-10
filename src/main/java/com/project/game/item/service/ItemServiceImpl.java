@@ -24,6 +24,8 @@ import com.project.game.item.exception.ItemTypeInvalidException;
 import com.project.game.item.exception.ItemTypeNotFoundException;
 import com.project.game.item.repository.ItemRepository;
 import com.project.game.item.repository.ItemTypeRepository;
+import com.project.game.job.exception.JobInvalidException;
+import com.project.game.level.exception.LevelInvalidException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemGetResponse> getItemOnShop(Long itemTypeId, Long levelId, Long jobId) {
-        List<Item> items = itemRepository.findByItemTypeItemTypeIdAndLevelIdLessThanAndJobJobId(itemTypeId, levelId, jobId);
+        List<Item> items = itemRepository.findByItemTypeItemTypeIdAndLevelIdLessThanEqualAndJobJobId(itemTypeId, levelId, jobId);
         List<ItemGetResponse> itemResponseList = items.stream().map(
             item -> new ItemGetResponse(item)
         ).collect(Collectors.toList());
@@ -63,6 +65,16 @@ public class ItemServiceImpl implements ItemService {
     public ItemBuyResponse buyItemOnShop(Long characterId, ItemBuyRequest itemBuyRequest) {
         Item item = itemRepository.findById(itemBuyRequest.getItemId()).orElseThrow(()->new ItemNotFoundException(itemBuyRequest.getItemId()));
         Character character = characterRepository.findById(characterId).orElseThrow(()->new CharacterNotFoundException(characterId));
+
+        //구매 할 아이템 레벨 검증
+        if(item.getLevelId() > character.getLevelId()){
+            throw new LevelInvalidException(character.getLevelId());
+        }
+
+        //구매 할 아이템 직업 검증
+        if(item.getJob().getJobId() != character.getJob().getJobId()){
+            throw new JobInvalidException(character.getJob().getJobId());
+        }
 
         character.minusMoney(item.getCost());
         characterItemRepository.save(new CharacterItem(character, item));
@@ -86,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
         CharacterItem characterItem = characterItemRepository.findById(characterItemId).orElseThrow(()->new CharacterItemNotFoundException(characterItemId));
 
         //아이템 타입 검증
-        if (!itemType.getItemTypeId().equals(characterItem.getItem().getItemId())) {
+        if (!itemType.getItemTypeId().equals(characterItem.getItem().getItemType().getItemTypeId())) {
             throw new ItemTypeInvalidException(characterItem.getItem().getItemId());
         }
 

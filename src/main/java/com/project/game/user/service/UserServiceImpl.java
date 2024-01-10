@@ -6,13 +6,17 @@ import static com.project.game.common.util.ShaUtil.sha256Encode;
 import static com.project.game.user.dto.UserUpsertRequest.userUpsertToEntity;
 
 import com.project.game.character.domain.Character;
+import com.project.game.character.domain.CharacterSkill;
 import com.project.game.character.repository.CharacterRepository;
+import com.project.game.character.repository.CharacterSkillRepository;
 import com.project.game.job.domain.Job;
 import com.project.game.job.exception.JobNotFoundException;
 import com.project.game.job.repository.JobRepository;
 import com.project.game.nation.domain.Nation;
 import com.project.game.nation.exception.NationNotFoundException;
 import com.project.game.nation.repository.NationRepository;
+import com.project.game.skill.domain.Skill;
+import com.project.game.skill.repository.SkillRepository;
 import com.project.game.user.dto.UserCharacterUpsertRequest;
 import com.project.game.user.dto.UserCharacterUpsertResponse;
 import com.project.game.user.dto.UserLoginRequest;
@@ -37,6 +41,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CharacterRepository characterRepository;
+    private final CharacterSkillRepository characterSkillRepository;
+    private final SkillRepository skillRepository;
     private final JobRepository jobRepository;
     private final NationRepository nationRepository;
 
@@ -106,6 +112,13 @@ public class UserServiceImpl implements UserService {
             .build();
 
         Character savedCharacter = characterRepository.saveAndFlush(character);
+
+        Skill defaultSkill = skillRepository.findDefaultSkill(character.getNation().getNationId());
+        CharacterSkill characterSkill = CharacterSkill.builder().character(savedCharacter)
+            .skill(defaultSkill).build();
+
+        characterSkillRepository.save(characterSkill);
+
         return new UserCharacterUpsertResponse(savedCharacter, generateAccessToken(
             savedCharacter.getCharacterId()));
     }

@@ -2,6 +2,7 @@ package com.project.game.common.interceptor;
 
 import static com.project.game.common.util.JwtUtil.isExpired;
 
+import com.project.game.match.service.MatchService;
 import com.project.game.user.service.UserService;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageBuilder;
 
 @Configuration
 @RequiredArgsConstructor
@@ -53,6 +55,8 @@ public class StomptInterceptor implements ChannelInterceptor {
                 headerAccessor.setSessionAttributes(sessionAttributes);
             }
         }
+
+        message = MessageBuilder.createMessage(message.getPayload(), accessor.toMessageHeaders());;
 
         return message;
     }

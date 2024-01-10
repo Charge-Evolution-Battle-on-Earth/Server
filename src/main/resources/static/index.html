@@ -58,9 +58,11 @@ $(document).ready(  function() {
 
         let msg = $('input#msg').val();
         console.log("mmmmmmmmmmmm>>", msg)
-        let apiUrl = '/ready/' + 7
+        let apiUrl = '/game/end/' + 14
         if (isStomp)
-        	socket.send(apiUrl, {}, JSON.stringify({matchId: '7', creatorReadyStatus: false, entrantReadyStatus: false}));
+        	socket.send(apiUrl, {}, JSON.stringify({}));
+        	//socket.send(apiUrl, {}, JSON.stringify({skillId: '3'}));
+        	//socket.send(apiUrl, {}, JSON.stringify({}));
         else
             socket.send(msg);
     });
@@ -69,7 +71,7 @@ $(document).ready(  function() {
 var socket = null;
 var isStomp = false;
 var authHeaders = {
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjaGFyYWN0ZXJJZCI6NywiaWF0IjoxNzA0NTY0MDAwLCJleHAiOjE3MDQ1Njc2MDB9.nZjGNX38HnrmMdSFTsS25FszOd2YC6xm9lnrK0FJY5g'
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjaGFyYWN0ZXJJZCI6NywiaWF0IjoxNzA0NjQ4MTU3LCJleHAiOjIwNjQ2NDgxNTd9.n8Ue55JVFL2cp8YfTyJlWBoYmr2eq5WrQpjUDf_LLEI'
 };
 
 function connectStomp() {
@@ -84,7 +86,7 @@ function connectStomp() {
         client.send('/TTT', {}, "msg: Haha~~~");
 
         // 해당 토픽을 구독한다!
-        client.subscribe('/topic/7/message', function (event) {
+        client.subscribe('/topic/14/message', function (event) {
             console.log("topic 발행", event)
         });
     }, {

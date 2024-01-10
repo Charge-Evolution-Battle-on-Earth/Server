@@ -7,11 +7,10 @@ import lombok.Setter;
 @Setter
 public class PlayReadyRequest {
 
-    String matchId;
-    Boolean creatorReadyStatus;    //true:준비완료, false:준비 미완료
-    Boolean entrantReadyStatus;    //true:준비완료, false:준비 미완료
+    Boolean selfReadyStatus;    //true:준비완료, false:준비 미완료
+    Boolean opponentReadyStatus;    //true:준비완료, false:준비 미완료
 
-    public static Boolean switchReadyStatus(Boolean entrantReadyStatus){
-        return !entrantReadyStatus;
+    public Boolean getToggleSelfReadyStatus(){
+        return !this.selfReadyStatus;
     }
 }

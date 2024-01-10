@@ -46,4 +46,30 @@ public class SkillEffect extends BaseEntity {
     @Embedded
     private StatRate statRate;
 
+    /**
+     * 고정 수치와 스킬 시전자의 Stat 비례 수치를 고려한 최종 스킬 효과 수치 반환
+     * @param turnOwnerStat 
+     * @param effect
+     * @return
+     */
+    public static Integer makeEffectValue(Stat turnOwnerStat, SkillEffect effect) {
+        double atkRelative = calculateRelativeValue(effect.getStatRate().getAtkRate(), turnOwnerStat.getAtk());
+        double hpRelative = calculateRelativeValue(effect.getStatRate().getHpRate(), turnOwnerStat.getHp());
+        double mpRelative = calculateRelativeValue(effect.getStatRate().getMpRate(), turnOwnerStat.getMp());
+        double spdRelative = calculateRelativeValue(effect.getStatRate().getSpdRate(), turnOwnerStat.getSpd());
+
+        int effectValue = effect.getFixedValue() + roundToInt(atkRelative) +
+            roundToInt(hpRelative) + roundToInt(mpRelative) + roundToInt(spdRelative);
+
+        return effectValue;
+    }
+
+    private static double calculateRelativeValue(int rate, int baseValue) {
+        return (double) rate / 100 * baseValue;
+    }
+
+    private static int roundToInt(double value) {
+        return (int) Math.round(value);
+    }
+
 }

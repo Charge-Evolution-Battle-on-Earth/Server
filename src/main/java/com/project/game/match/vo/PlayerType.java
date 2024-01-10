@@ -5,7 +5,13 @@ package com.project.game.match.vo;
  */
 public enum PlayerType {
 
-    CREATOR,
+    HOST,
     ENTRANT,
-    NONE
+    NONE;
+
+    public static PlayerType togglePlayerType(PlayerType type){
+        if(type == HOST) return ENTRANT;
+        else if(type == ENTRANT) return HOST;
+        else return NONE;
+    }
 }

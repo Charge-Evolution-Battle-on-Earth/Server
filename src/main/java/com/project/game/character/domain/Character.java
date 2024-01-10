@@ -77,6 +77,10 @@ public class Character {
         this.money -= cost;
     }
 
+    public void plusExp(Integer value){
+        this.exp += value;
+    }
+
     private boolean validateCost(Integer cost) {
         return cost == null || cost < ZERO;
     }

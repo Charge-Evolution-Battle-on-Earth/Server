@@ -22,7 +22,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobGetListResponse> getJobList() {
-        List<Job> jobs = jobRepository.findAll();
+        List<Job> jobs = jobRepository.findAllByOrderByJobIdAsc();
         List<JobGetListResponse> jobResponseList = jobs.stream().map(
             job -> new JobGetListResponse(job)
         ).collect(Collectors.toList());

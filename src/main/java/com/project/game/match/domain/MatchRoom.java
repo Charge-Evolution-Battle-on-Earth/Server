@@ -168,6 +168,10 @@ public class MatchRoom extends BaseEntity {
         this.entrant = entrant;
     }
 
+    public void setHost(Character host){
+        this.host = host;
+    }
+
     public void setMatchStatus(MatchStatus matchStatus){
         this.matchStatus = matchStatus;
     }

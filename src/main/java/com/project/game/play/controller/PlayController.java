@@ -2,12 +2,14 @@ package com.project.game.play.controller;
 
 import static com.project.game.common.util.SimpMessageHeaderAccessorUtil.extractCharacterIdFromAccessor;
 
+import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.match.service.MatchService;
 import com.project.game.play.dto.PlayEndResponse;
 import com.project.game.play.dto.PlayGreetingResponse;
 import com.project.game.play.dto.PlayReadyRequest;
 import com.project.game.play.dto.PlayReadyResponse;
 import com.project.game.play.dto.PlayStartResponse;
+import com.project.game.play.dto.PlaySurrenderResponse;
 import com.project.game.play.dto.PlayTurnRequest;
 import com.project.game.play.dto.PlayTurnResponse;
 import lombok.RequiredArgsConstructor;
@@ -50,17 +52,33 @@ public class PlayController {
 
     @MessageMapping("game/turn/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayTurnResponse gameTurn(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor, PlayTurnRequest playTurnRequest){
+    private PlayTurnResponse turnGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor, PlayTurnRequest playTurnRequest){
         Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayTurnResponse response = matchService.gameTurn(characterId, Long.parseLong(matchId), playTurnRequest);
+        PlayTurnResponse response = matchService.turnGame(characterId, Long.parseLong(matchId), playTurnRequest);
         return response;
     }
 
     @MessageMapping("game/end/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayEndResponse gameEnd(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+    private PlayEndResponse endGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
         Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayEndResponse response = matchService.gameEnd(characterId, Long.parseLong(matchId));
+        PlayEndResponse response = matchService.endGame(characterId, Long.parseLong(matchId));
+        return response;
+    }
+
+    @MessageMapping("game/surrender/{matchId}")
+    @SendTo("/topic/{matchId}/message")
+    private PlaySurrenderResponse surrenderGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+        Long characterId = extractCharacterIdFromAccessor(accessor);
+        PlaySurrenderResponse response = matchService.surrenderGame(characterId, Long.parseLong(matchId));
+        return response;
+    }
+
+    @MessageMapping("game/quit/{matchId}")
+    @SendTo("/topic/{matchId}/message")
+    private PlayQuitResponse quitGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+        Long characterId = extractCharacterIdFromAccessor(accessor);
+        PlayQuitResponse response = matchService.quitGame(characterId, Long.parseLong(matchId));
         return response;
     }
 }

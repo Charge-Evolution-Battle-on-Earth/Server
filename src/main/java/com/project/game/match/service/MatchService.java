@@ -4,11 +4,13 @@ import com.project.game.match.dto.MatchRoomEnterRequest;
 import com.project.game.match.dto.MatchRoomEnterResponse;
 import com.project.game.match.dto.MatchRoomGetResponse;
 import com.project.game.match.dto.MatchRoomUpsertResponse;
+import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.play.dto.PlayEndResponse;
 import com.project.game.play.dto.PlayGreetingResponse;
 import com.project.game.play.dto.PlayReadyRequest;
 import com.project.game.play.dto.PlayReadyResponse;
 import com.project.game.play.dto.PlayStartResponse;
+import com.project.game.play.dto.PlaySurrenderResponse;
 import com.project.game.play.dto.PlayTurnRequest;
 import com.project.game.play.dto.PlayTurnResponse;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +22,7 @@ public interface MatchService {
 
     MatchRoomUpsertResponse saveMatchRoom(Long characterId);
 
-    MatchRoomEnterResponse matchRoomEnter(Long characterId, MatchRoomEnterRequest matchRoomEnterRequest);
+    MatchRoomEnterResponse enterMatchRoom(Long characterId, MatchRoomEnterRequest matchRoomEnterRequest);
 
     PlayReadyResponse ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest);
 
@@ -28,7 +30,11 @@ public interface MatchService {
 
     PlayStartResponse start(Long characterId, Long matchId);
 
-    PlayTurnResponse gameTurn(Long characterId, Long matchId, PlayTurnRequest playTurnRequest);
+    PlayTurnResponse turnGame(Long characterId, Long matchId, PlayTurnRequest playTurnRequest);
 
-    PlayEndResponse gameEnd(Long characterId, Long matchId);
+    PlayEndResponse endGame(Long characterId, Long matchId);
+
+    PlaySurrenderResponse surrenderGame(Long characterId, Long matchId);
+
+    PlayQuitResponse quitGame(Long characterId, Long matchId);
 }

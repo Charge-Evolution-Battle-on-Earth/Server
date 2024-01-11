@@ -37,7 +37,7 @@ public class MatchController {
 
     @PostMapping("/room/enter")
     private ResponseEntity<MatchRoomEnterResponse> matchRoomEnter(@AuthenticationPrincipal Long characterId, @RequestBody MatchRoomEnterRequest matchRoomEnterRequest){
-        MatchRoomEnterResponse response = matchService.matchRoomEnter(characterId, matchRoomEnterRequest);
+        MatchRoomEnterResponse response = matchService.enterMatchRoom(characterId, matchRoomEnterRequest);
         return ResponseEntity.ok(response);
     }
 }

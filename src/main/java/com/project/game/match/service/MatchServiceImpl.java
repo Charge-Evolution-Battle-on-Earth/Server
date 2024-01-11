@@ -23,6 +23,7 @@ import com.project.game.match.dto.MatchRoomEnterRequest;
 import com.project.game.match.dto.MatchRoomEnterResponse;
 import com.project.game.match.dto.MatchRoomGetResponse;
 import com.project.game.match.dto.MatchRoomUpsertResponse;
+import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.match.exception.LevelDifferenceInvalidException;
 import com.project.game.match.exception.MatchRoomFullException;
 import com.project.game.match.exception.MatchRoomNotFoundException;
@@ -37,6 +38,7 @@ import com.project.game.play.dto.PlayGreetingResponse;
 import com.project.game.play.dto.PlayReadyRequest;
 import com.project.game.play.dto.PlayReadyResponse;
 import com.project.game.play.dto.PlayStartResponse;
+import com.project.game.play.dto.PlaySurrenderResponse;
 import com.project.game.play.dto.PlayTurnRequest;
 import com.project.game.play.dto.PlayTurnResponse;
 import com.project.game.play.exception.MatchStatusInvalidException;
@@ -87,7 +89,7 @@ public class MatchServiceImpl implements MatchService{
 
     @Override
     @Transactional
-    public MatchRoomEnterResponse matchRoomEnter(Long characterId,
+    public MatchRoomEnterResponse enterMatchRoom(Long characterId,
         MatchRoomEnterRequest matchRoomEnterRequest) {
         Character entrant = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
@@ -192,7 +194,7 @@ public class MatchServiceImpl implements MatchService{
 
     @Override
     @Transactional
-    public PlayTurnResponse gameTurn(Long characterId, Long matchId,
+    public PlayTurnResponse turnGame(Long characterId, Long matchId,
         PlayTurnRequest playTurnRequest) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
@@ -242,7 +244,7 @@ public class MatchServiceImpl implements MatchService{
 
     @Override
     @Transactional
-    public PlayEndResponse gameEnd(Long characterId, Long matchId) {
+    public PlayEndResponse endGame(Long characterId, Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
@@ -268,9 +270,92 @@ public class MatchServiceImpl implements MatchService{
         Integer winnerGold = winner.getLevelId() * matchRoom.getStakedGold();
         Integer loserGold = loser.getLevelId() * matchRoom.getStakedGold() / 5;
         Integer winnerExp = 100;
-        Integer loserExp = 100 /5;
+        Integer loserExp = 100 / 5;
 
-        //매칭 결과 정산 money & exp
+        processGameResult(matchRoom, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
+
+        return new PlayEndResponse(winnerType, loserType, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
+    }
+
+    @Override
+    public PlaySurrenderResponse surrenderGame(Long characterId, Long matchId) {
+        MatchRoom matchRoom = matchRoomRepository.findById(matchId)
+            .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
+
+        PlayerType playerType = matchRoom.getPlayerType(characterId);
+
+        //진행 중인 매치인지 확인
+        if(matchRoom.getMatchStatus() != IN_PROGRESS){
+            throw new MatchStatusInvalidException(matchRoom.getMatchRoomId());
+        }
+
+        //winner & loser 확인
+        Character winner;
+        Character loser;
+
+        PlayerType winnerType = playerType;
+        PlayerType loserType = togglePlayerType(playerType);
+
+        if(winnerType == HOST){
+            winner = matchRoom.getHost();
+            loser = matchRoom.getEntrant();
+        }else{
+            winner = matchRoom.getEntrant();
+            loser = matchRoom.getHost();
+        }
+
+        Integer winnerGold = winner.getLevelId() * matchRoom.getStakedGold();
+        Integer loserGold = loser.getLevelId() * matchRoom.getStakedGold() / 5;
+        Integer winnerExp = 100;
+        Integer loserExp = 100 / 5;
+
+        processGameResult(matchRoom, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
+
+        return new PlaySurrenderResponse(winnerType, loserType, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
+    }
+
+    @Override
+    @Transactional
+    public PlayQuitResponse quitGame(Long characterId, Long matchId) {
+        MatchRoom matchRoom = matchRoomRepository.findById(matchId)
+            .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
+
+        PlayerType playerType = matchRoom.getPlayerType(characterId);
+        Character player = characterRepository.findById(characterId).orElseThrow(()->new CharacterNotFoundException(characterId));
+
+        //대기 중인 매치인지 확인
+        if(matchRoom.getMatchStatus() != WAITING){
+            throw new MatchStatusInvalidException(matchRoom.getMatchRoomId());
+        }
+
+        if(playerType == ENTRANT){
+            //입장자일 경우 요청자 데이터 삭제
+            matchRoom.setEntrant(null);
+        }else if (playerType == HOST){
+            if(matchRoom.getEntrant() == null){
+                //남은 사용자가 없는 경우 매칭방 삭제
+                matchRoomRepository.delete(matchRoom);
+            } else {
+                matchRoom.setHost(matchRoom.getEntrant());
+                matchRoom.setEntrant(null);
+            }
+        }
+
+        return new PlayQuitResponse(player, playerType);
+    }
+
+    /**
+     * 매칭 결과 정산 money & exp
+     * @param matchRoom
+     * @param winner
+     * @param loser
+     * @param winnerGold
+     * @param loserGold
+     * @param winnerExp
+     * @param loserExp
+     */
+    private void processGameResult(MatchRoom matchRoom, Character winner, Character loser,
+        Integer winnerGold, Integer loserGold, Integer winnerExp, Integer loserExp) {
         //TODO level up 이벤트 발생
         winner.plusMoney(winnerGold);
         winner.plusExp(winnerExp);
@@ -284,8 +369,5 @@ public class MatchServiceImpl implements MatchService{
 
         //매칭 상태 초기화
         matchRoom.setInitMatchRoom();
-
-        return new PlayEndResponse(winnerType, loserType, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
-
     }
 }

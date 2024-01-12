@@ -15,8 +15,8 @@ public class MatchRoomGetResponse {
 
     public MatchRoomGetResponse(MatchRoom matchRoom) {
         this.matchRoomId = matchRoom.getMatchRoomId();
-        this.hostId = matchRoom.getHost().getCharacterId();
-        this.entrantId = matchRoom.getEntrant().getCharacterId();
+        this.hostId = (matchRoom.getHost() != null) ?matchRoom.getHost().getCharacterId() : null;
+        this.entrantId = (matchRoom.getEntrant() != null) ? matchRoom.getEntrant().getCharacterId() : null;
         this.matchStatus = matchRoom.getMatchStatus();
         this.stakeGold = matchRoom.getStakedGold();
     }

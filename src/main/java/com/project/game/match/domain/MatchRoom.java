@@ -32,11 +32,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Entity(name = "match_room")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatchRoom extends BaseEntity {
+
+
+    @Transient
+    private static final Integer loserGoldDivisor = 5;  //패배 시 패널티 비율 ex) 100(승리자 보상) / 5 = 20
 
     @Transient
     private static final Integer defaultStakedGold = 100;
@@ -110,6 +115,14 @@ public class MatchRoom extends BaseEntity {
         }else{
             throw new MatchRoomNotFinished();
         }
+    }
+
+    public Integer getWinnerGold(Integer levelId){
+        return this.stakedGold * levelId;
+    }
+
+    public Integer getLoserGold(Integer levelId){
+        return this.stakedGold * levelId / loserGoldDivisor;
     }
 
     public Character getWinner(){

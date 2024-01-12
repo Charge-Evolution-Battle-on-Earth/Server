@@ -1,6 +1,7 @@
 package com.project.game.play.dto;
 
 import com.project.game.character.domain.Character;
+import com.project.game.match.domain.MatchRoom;
 import com.project.game.match.vo.PlayerType;
 import lombok.Getter;
 
@@ -11,21 +12,17 @@ public class PlayEndResponse {
     private PlayerType loserType;
     private Integer winnerGold;
     private Integer loserGold;
-    private Integer winnerExp;
-    private Integer loserExp;
     private Integer winnerTotalGold;
     private Integer loserTotalGold;
     private Integer winnerTotalExp;
     private Integer loserTotalExp;
     private String message;
 
-    public PlayEndResponse(PlayerType winnerType, PlayerType loserType, Character winner, Character loser, Integer winnerGold, Integer loserGold, Integer winnerExp, Integer loserExp) {
+    public PlayEndResponse(PlayerType winnerType, PlayerType loserType, Character winner, Character loser, MatchRoom matchRoom) {
         this.winnerType = winnerType;
         this.loserType = loserType;
-        this.winnerGold = winnerGold;
-        this.loserGold = loserGold;
-        this.winnerExp = winnerExp;
-        this.loserExp = loserExp;
+        this.winnerGold = matchRoom.getWinnerGold(winner.getLevelId());
+        this.loserGold = matchRoom.getLoserGold(loser.getLevelId());
         this.winnerTotalGold = winner.getMoney();
         this.loserTotalGold = loser.getMoney();
         this.winnerTotalExp = winner.getExp();

@@ -9,7 +9,6 @@ import com.project.game.nation.domain.Nation;
 import com.project.game.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,8 +19,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 @Entity(name = "characters")
 @Getter
@@ -79,6 +76,14 @@ public class Character {
 
     public void plusExp(Integer value){
         this.exp += value;
+    }
+
+    public void minusExp(Integer value){
+        this.exp -= value;
+    }
+
+    public void setLevel(Integer level){
+        this.levelId = level;
     }
 
     private boolean validateCost(Integer cost) {

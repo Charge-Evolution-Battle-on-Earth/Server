@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
 
         Character savedCharacter = characterRepository.saveAndFlush(character);
 
+        //TODO 계정 생성 시 나라별 스킬 2개를 추가로 배우도록 수정
         Skill defaultSkill = skillRepository.findDefaultSkill(character.getNation().getNationId());
         CharacterSkill characterSkill = CharacterSkill.builder().character(savedCharacter)
             .skill(defaultSkill).build();

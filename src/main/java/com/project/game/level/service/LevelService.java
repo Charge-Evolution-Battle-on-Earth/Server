@@ -4,5 +4,6 @@ import com.project.game.level.dto.LevelUpResponse;
 
 public interface LevelService {
 
-    LevelUpResponse levelUp(Integer levelId);
+    Boolean isLevelUp(Integer characterExp, Integer levelNeedExp);
+    void checkAndProcessLevelUp(Long characterId);
 }

@@ -17,6 +17,8 @@ import com.project.game.character.repository.CharacterRepository;
 import com.project.game.character.repository.CharacterSkillRepository;
 import com.project.game.character.service.CharacterService;
 import com.project.game.common.domain.Stat;
+import com.project.game.level.repository.LevelRepository;
+import com.project.game.level.service.LevelService;
 import com.project.game.match.domain.MatchHistory;
 import com.project.game.match.domain.MatchRoom;
 import com.project.game.match.dto.MatchRoomEnterRequest;
@@ -25,6 +27,7 @@ import com.project.game.match.dto.MatchRoomGetResponse;
 import com.project.game.match.dto.MatchRoomUpsertResponse;
 import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.match.exception.LevelDifferenceInvalidException;
+import com.project.game.match.exception.MatchRoomDuplicateParticipantException;
 import com.project.game.match.exception.MatchRoomFullException;
 import com.project.game.match.exception.MatchRoomNotFoundException;
 import com.project.game.match.exception.MatchRoomTurnInvalidException;
@@ -50,6 +53,7 @@ import com.project.game.skill.repository.SkillRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -67,6 +71,12 @@ public class MatchServiceImpl implements MatchService{
     private final SkillRepository skillRepository;
     private final SkillEffectRepository skillEffectRepository;
     private final MatchHistoryRepository matchHistoryRepository;
+    private final LevelService levelService;
+
+    @Value("${game.win-exp}")
+    private Integer winExp;
+    @Value("${game.lose-exp}")
+    private Integer loseExp;
 
     @Override
     public Slice<MatchRoomGetResponse> findMatchRoomList(Pageable pageable) {
@@ -102,7 +112,12 @@ public class MatchServiceImpl implements MatchService{
             throw new MatchRoomFullException(matchRoom.getMatchRoomId());
         }
 
-        //조건 2. 레벨 차이가 2 이하이여야 함.
+        //조건 2. 자신이 이미 방에 참여 중인 경우 참여자로 입장할 수없다.
+        if(matchRoom.getHost().getCharacterId() == characterId){
+            throw new MatchRoomDuplicateParticipantException(characterId);
+        }
+
+        //조건 3. 레벨 차이가 2 이하이여야 함.
         Integer levelDifference = matchRoom.getHost().getLevelId() - entrant.getLevelId();
         if(Math.abs(levelDifference) > 2){
             throw new LevelDifferenceInvalidException(levelDifference);
@@ -232,11 +247,11 @@ public class MatchServiceImpl implements MatchService{
 
         //만약 둘 중 한 플레이어의 체력이 0또는 0 이하가 될 경우 게임 종료 상태 반환
         if(matchRoom.isGameOverWithStat()){
+            matchRoom.setMatchStatus(FINISHED);
             return new PlayTurnResponse(true);
         }else{
             PlayerType toggleTurnOwner = matchRoom.getToggleTurnOwner();
             matchRoom.setTurnOwner(toggleTurnOwner);
-            matchRoom.setMatchStatus(FINISHED);
             return new PlayTurnResponse(false, matchRoom.getHostStat(), matchRoom.getEntrantStat(),
                 toggleTurnOwner, skill.getSkillNm());
         }
@@ -267,14 +282,9 @@ public class MatchServiceImpl implements MatchService{
         PlayerType winnerType = matchRoom.getWinnerType();
         PlayerType loserType = togglePlayerType(winnerType);
 
-        Integer winnerGold = winner.getLevelId() * matchRoom.getStakedGold();
-        Integer loserGold = loser.getLevelId() * matchRoom.getStakedGold() / 5;
-        Integer winnerExp = 100;
-        Integer loserExp = 100 / 5;
+        processGameResult(matchRoom, winner, loser);
 
-        processGameResult(matchRoom, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
-
-        return new PlayEndResponse(winnerType, loserType, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
+        return new PlayEndResponse(winnerType, loserType, winner, loser, matchRoom);
     }
 
     @Override
@@ -304,14 +314,9 @@ public class MatchServiceImpl implements MatchService{
             loser = matchRoom.getHost();
         }
 
-        Integer winnerGold = winner.getLevelId() * matchRoom.getStakedGold();
-        Integer loserGold = loser.getLevelId() * matchRoom.getStakedGold() / 5;
-        Integer winnerExp = 100;
-        Integer loserExp = 100 / 5;
+        processGameResult(matchRoom, winner, loser);
 
-        processGameResult(matchRoom, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
-
-        return new PlaySurrenderResponse(winnerType, loserType, winner, loser, winnerGold, loserGold, winnerExp, loserExp);
+        return new PlaySurrenderResponse(winnerType, loserType, winner, loser, matchRoom);
     }
 
     @Override
@@ -349,18 +354,22 @@ public class MatchServiceImpl implements MatchService{
      * @param matchRoom
      * @param winner
      * @param loser
-     * @param winnerGold
-     * @param loserGold
-     * @param winnerExp
-     * @param loserExp
      */
-    private void processGameResult(MatchRoom matchRoom, Character winner, Character loser,
-        Integer winnerGold, Integer loserGold, Integer winnerExp, Integer loserExp) {
-        //TODO level up 이벤트 발생
+    private void processGameResult(MatchRoom matchRoom, Character winner, Character loser) {
+        Integer winnerGold = matchRoom.getWinnerGold(winner.getLevelId());
+        Integer loserGold = matchRoom.getLoserGold(loser.getLevelId());
+        Integer winnerExp = winExp;
+        Integer loserExp = loseExp;
+
+        //게임 결과 보상 부여
         winner.plusMoney(winnerGold);
         winner.plusExp(winnerExp);
         loser.plusMoney(loserGold);
         loser.plusExp(loserExp);
+
+        //levelUp 여부 확인 및 처리
+        levelService.checkAndProcessLevelUp(winner.getCharacterId());
+        levelService.checkAndProcessLevelUp(loser.getCharacterId());
 
         //match history 저장
         MatchHistory matchHistory = MatchHistory.builder().matchRoom(matchRoom).winner(winner)

@@ -17,7 +17,6 @@ import com.project.game.character.repository.CharacterRepository;
 import com.project.game.character.repository.CharacterSkillRepository;
 import com.project.game.character.service.CharacterService;
 import com.project.game.common.domain.Stat;
-import com.project.game.level.repository.LevelRepository;
 import com.project.game.level.service.LevelService;
 import com.project.game.match.domain.MatchHistory;
 import com.project.game.match.domain.MatchRoom;
@@ -62,7 +61,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class MatchServiceImpl implements MatchService{
+public class MatchServiceImpl implements MatchService {
 
     private final MatchRoomRepository matchRoomRepository;
     private final CharacterRepository characterRepository;
@@ -81,8 +80,9 @@ public class MatchServiceImpl implements MatchService{
     @Override
     public Slice<MatchRoomGetResponse> findMatchRoomList(Pageable pageable) {
         Slice<MatchRoom> matchRooms = matchRoomRepository.findAllByPaging(pageable);
-        List<MatchRoomGetResponse> responseList = matchRooms.stream().map(matchRoom -> new MatchRoomGetResponse(matchRoom)).collect(
-            Collectors.toList());
+        List<MatchRoomGetResponse> responseList = matchRooms.stream()
+            .map(matchRoom -> new MatchRoomGetResponse(matchRoom)).collect(
+                Collectors.toList());
 
         return new SliceImpl<>(responseList, pageable, matchRooms.hasNext());
     }
@@ -91,8 +91,9 @@ public class MatchServiceImpl implements MatchService{
     public MatchRoomUpsertResponse saveMatchRoom(Long characterId) {
         Character host = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
-        MatchRoom matchRoom = matchRoomRepository.save(MatchRoom.builder().host(host).matchStatus(WAITING).stakedGold(makeStakedGold(
-            host.getLevelId())).build());
+        MatchRoom matchRoom = matchRoomRepository.save(
+            MatchRoom.builder().host(host).matchStatus(WAITING).stakedGold(makeStakedGold(
+                host.getLevelId())).build());
 
         return new MatchRoomUpsertResponse(matchRoom);
     }
@@ -103,23 +104,24 @@ public class MatchServiceImpl implements MatchService{
         MatchRoomEnterRequest matchRoomEnterRequest) {
         Character entrant = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
-        MatchRoom matchRoom = matchRoomRepository.findById(matchRoomEnterRequest.getMatchRoomId()).orElseThrow(()-> new MatchRoomNotFoundException(
-            matchRoomEnterRequest.getMatchRoomId()));
+        MatchRoom matchRoom = matchRoomRepository.findById(matchRoomEnterRequest.getMatchRoomId())
+            .orElseThrow(() -> new MatchRoomNotFoundException(
+                matchRoomEnterRequest.getMatchRoomId()));
 
         //입장 가능 여부 확인
         //조건 1. 방에 entrant 자리는 비어 있어야함.
-        if(matchRoom.getEntrant() != null){
+        if (matchRoom.getEntrant() != null) {
             throw new MatchRoomFullException(matchRoom.getMatchRoomId());
         }
 
         //조건 2. 자신이 이미 방에 참여 중인 경우 참여자로 입장할 수없다.
-        if(matchRoom.getHost().getCharacterId() == characterId){
+        if (matchRoom.getHost().getCharacterId() == characterId) {
             throw new MatchRoomDuplicateParticipantException(characterId);
         }
 
         //조건 3. 레벨 차이가 2 이하이여야 함.
         Integer levelDifference = matchRoom.getHost().getLevelId() - entrant.getLevelId();
-        if(Math.abs(levelDifference) > 2){
+        if (Math.abs(levelDifference) > 2) {
             throw new LevelDifferenceInvalidException(levelDifference);
         }
 
@@ -131,7 +133,8 @@ public class MatchServiceImpl implements MatchService{
 
     @Override
     @Transactional
-    public PlayReadyResponse ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest) {
+    public PlayReadyResponse ready(Long characterId, Long matchId,
+        PlayReadyRequest playReadyRequest) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
         PlayerType playerType = matchRoom.getPlayerType(characterId);
@@ -142,26 +145,25 @@ public class MatchServiceImpl implements MatchService{
         Boolean entrantReadyStatus;
 
         //플레이어 타입 별 준비 상태 set
-        if(playerType.equals(HOST)) {
+        if (playerType.equals(HOST)) {
             hostReadyStatus = selfReadyStatus;
             entrantReadyStatus = opponentReadyStatus;
-        }
-        else if(playerType.equals(ENTRANT)){
+        } else if (playerType.equals(ENTRANT)) {
             hostReadyStatus = opponentReadyStatus;
             entrantReadyStatus = selfReadyStatus;
-        }
-        else{
+        } else {
             throw new PlayerTypeInvalidException(characterId);
         }
 
         //매치 방 상태 변경
-        if(hostReadyStatus && entrantReadyStatus){
+        if (hostReadyStatus && entrantReadyStatus) {
             matchRoom.setMatchStatus(READY);
-        }else {
+        } else {
             matchRoom.setMatchStatus(WAITING);
         }
 
-        return new PlayReadyResponse(hostReadyStatus, entrantReadyStatus, matchRoom.getMatchStatus());
+        return new PlayReadyResponse(hostReadyStatus, entrantReadyStatus,
+            matchRoom.getMatchStatus());
     }
 
     @Override
@@ -179,7 +181,7 @@ public class MatchServiceImpl implements MatchService{
         Character entrant = matchRoom.getEntrant();
 
         //READY 이외의 상태일 경우 예외 처리
-        if(!matchRoom.getMatchStatus().equals(READY)){
+        if (!matchRoom.getMatchStatus().equals(READY)) {
             throw new MatchStatusInvalidException(matchId);
         }
 
@@ -193,9 +195,9 @@ public class MatchServiceImpl implements MatchService{
             entrant.getCharacterId());
 
         //선제 공격 플레이어 선정(spd 높은 플레이어)
-        if(hostTotalStat.getSpd() > entrantTotalStat.getSpd()){
+        if (hostTotalStat.getSpd() > entrantTotalStat.getSpd()) {
             matchRoom.setTurnOwner(HOST);
-        }else{
+        } else {
             matchRoom.setTurnOwner(ENTRANT);
         }
 
@@ -204,7 +206,8 @@ public class MatchServiceImpl implements MatchService{
         matchRoom.setEntrantStatAndStartHp(entrantTotalStat);
         matchRoom.setMatchStatus(IN_PROGRESS);
 
-        return new PlayStartResponse(hostTotalStat, entrantTotalStat, hostSkillList, entrantSkillList, matchRoom.getTurnOwner());
+        return new PlayStartResponse(hostTotalStat, entrantTotalStat, hostSkillList,
+            entrantSkillList, matchRoom.getTurnOwner());
     }
 
     @Override
@@ -214,22 +217,24 @@ public class MatchServiceImpl implements MatchService{
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
         Long skillId = playTurnRequest.getSkillId();
-        Skill skill = skillRepository.findById(skillId).orElseThrow(()-> new SkillNotFoundException());
+        Skill skill = skillRepository.findById(skillId)
+            .orElseThrow(() -> new SkillNotFoundException());
 
         PlayerType playerType = matchRoom.getPlayerType(characterId);
 
         //turn owner 요청자 비교 검증
-        if(matchRoom.getTurnOwner() != playerType){
+        if (matchRoom.getTurnOwner() != playerType) {
             throw new MatchRoomTurnInvalidException(characterId);
         }
 
         //IN_PROGRESS 이외의 상태일 경우 예외 처리
-        if(!matchRoom.getMatchStatus().equals(IN_PROGRESS)){
+        if (!matchRoom.getMatchStatus().equals(IN_PROGRESS)) {
             throw new MatchStatusInvalidException(matchId);
         }
 
         //skill 보유 여부 검증
-        if(!characterSkillRepository.existsByCharacterCharacterIdAndSkillSkillId(characterId, skillId)){
+        if (!characterSkillRepository.existsByCharacterCharacterIdAndSkillSkillId(characterId,
+            skillId)) {
             throw new CharacterSkillNotFoundException();
         }
 
@@ -237,19 +242,18 @@ public class MatchServiceImpl implements MatchService{
         List<SkillEffect> skillEffects = skillEffectRepository.findBySkillSkillId(skillId);
 
         for (SkillEffect effect : skillEffects) {
-            if(playerType == ENTRANT){
+            if (playerType == ENTRANT) {
                 matchRoom.effectSkillCastByEntrant(effect);
             } else if (playerType == HOST) {
                 matchRoom.effectSkillCastByHost(effect);
             }
         }
 
-
         //만약 둘 중 한 플레이어의 체력이 0또는 0 이하가 될 경우 게임 종료 상태 반환
-        if(matchRoom.isGameOverWithStat()){
+        if (matchRoom.isGameOverWithStat()) {
             matchRoom.setMatchStatus(FINISHED);
             return new PlayTurnResponse(true);
-        }else{
+        } else {
             PlayerType toggleTurnOwner = matchRoom.getToggleTurnOwner();
             matchRoom.setTurnOwner(toggleTurnOwner);
             return new PlayTurnResponse(false, matchRoom.getHostStat(), matchRoom.getEntrantStat(),
@@ -266,12 +270,12 @@ public class MatchServiceImpl implements MatchService{
         PlayerType playerType = matchRoom.getPlayerType(characterId);
 
         //종료된 매치인지 확인
-        if(matchRoom.getMatchStatus() != FINISHED){
+        if (matchRoom.getMatchStatus() != FINISHED) {
             throw new MatchStatusInvalidException(matchRoom.getMatchRoomId());
         }
 
         //host 사용자의 요청만 허용
-        if(playerType != HOST){
+        if (playerType != HOST) {
             throw new PlayerTypeNotHostException();
         }
 
@@ -295,7 +299,7 @@ public class MatchServiceImpl implements MatchService{
         PlayerType playerType = matchRoom.getPlayerType(characterId);
 
         //진행 중인 매치인지 확인
-        if(matchRoom.getMatchStatus() != IN_PROGRESS){
+        if (matchRoom.getMatchStatus() != IN_PROGRESS) {
             throw new MatchStatusInvalidException(matchRoom.getMatchRoomId());
         }
 
@@ -306,10 +310,10 @@ public class MatchServiceImpl implements MatchService{
         PlayerType winnerType = playerType;
         PlayerType loserType = togglePlayerType(playerType);
 
-        if(winnerType == HOST){
+        if (winnerType == HOST) {
             winner = matchRoom.getHost();
             loser = matchRoom.getEntrant();
-        }else{
+        } else {
             winner = matchRoom.getEntrant();
             loser = matchRoom.getHost();
         }
@@ -326,18 +330,19 @@ public class MatchServiceImpl implements MatchService{
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
         PlayerType playerType = matchRoom.getPlayerType(characterId);
-        Character player = characterRepository.findById(characterId).orElseThrow(()->new CharacterNotFoundException(characterId));
+        Character player = characterRepository.findById(characterId)
+            .orElseThrow(() -> new CharacterNotFoundException(characterId));
 
         //대기 중인 매치인지 확인
-        if(matchRoom.getMatchStatus() != WAITING){
+        if (matchRoom.getMatchStatus() != WAITING) {
             throw new MatchStatusInvalidException(matchRoom.getMatchRoomId());
         }
 
-        if(playerType == ENTRANT){
+        if (playerType == ENTRANT) {
             //입장자일 경우 요청자 데이터 삭제
             matchRoom.setEntrant(null);
-        }else if (playerType == HOST){
-            if(matchRoom.getEntrant() == null){
+        } else if (playerType == HOST) {
+            if (matchRoom.getEntrant() == null) {
                 //남은 사용자가 없는 경우 매칭방 삭제
                 matchRoomRepository.delete(matchRoom);
             } else {
@@ -351,6 +356,7 @@ public class MatchServiceImpl implements MatchService{
 
     /**
      * 매칭 결과 정산 money & exp
+     *
      * @param matchRoom
      * @param winner
      * @param loser

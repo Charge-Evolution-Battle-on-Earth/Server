@@ -24,20 +24,24 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping("/room")
-    private ResponseEntity<Slice<MatchRoomGetResponse>> findMatchRoomList(Pageable pageable){
+    private ResponseEntity<Slice<MatchRoomGetResponse>> findMatchRoomList(Pageable pageable) {
         Slice<MatchRoomGetResponse> response = matchService.findMatchRoomList(pageable);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/room")
-    private ResponseEntity<MatchRoomUpsertResponse> saveMatchRoom(@AuthenticationPrincipal Long characterId){
+    private ResponseEntity<MatchRoomUpsertResponse> saveMatchRoom(
+        @AuthenticationPrincipal Long characterId) {
         MatchRoomUpsertResponse response = matchService.saveMatchRoom(characterId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/room/enter")
-    private ResponseEntity<MatchRoomEnterResponse> matchRoomEnter(@AuthenticationPrincipal Long characterId, @RequestBody MatchRoomEnterRequest matchRoomEnterRequest){
-        MatchRoomEnterResponse response = matchService.enterMatchRoom(characterId, matchRoomEnterRequest);
+    private ResponseEntity<MatchRoomEnterResponse> matchRoomEnter(
+        @AuthenticationPrincipal Long characterId,
+        @RequestBody MatchRoomEnterRequest matchRoomEnterRequest) {
+        MatchRoomEnterResponse response = matchService.enterMatchRoom(characterId,
+            matchRoomEnterRequest);
         return ResponseEntity.ok(response);
     }
 }

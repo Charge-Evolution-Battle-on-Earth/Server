@@ -27,7 +27,7 @@ public class MatchHistory extends BaseEntity {
     private Long matchHistoryId;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name="match_room_id")
+    @JoinColumn(name = "match_room_id")
     private MatchRoom matchRoom;
 
     @ManyToOne(fetch = LAZY)

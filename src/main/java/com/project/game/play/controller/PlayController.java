@@ -27,7 +27,7 @@ public class PlayController {
 
     @MessageMapping("/greeting/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayGreetingResponse greeting(SimpMessageHeaderAccessor accessor){
+    private PlayGreetingResponse greeting(SimpMessageHeaderAccessor accessor) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
         //TODO 메세지 관리 방법 고민
         PlayGreetingResponse response = matchService.greeting(characterId);
@@ -36,15 +36,18 @@ public class PlayController {
 
     @MessageMapping("ready/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayReadyResponse ready(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor, PlayReadyRequest playReadyRequest){
+    private PlayReadyResponse ready(@DestinationVariable String matchId,
+        SimpMessageHeaderAccessor accessor, PlayReadyRequest playReadyRequest) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayReadyResponse response = matchService.ready(characterId, Long.parseLong(matchId), playReadyRequest);
+        PlayReadyResponse response = matchService.ready(characterId, Long.parseLong(matchId),
+            playReadyRequest);
         return response;
     }
 
     @MessageMapping("start/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayStartResponse start(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+    private PlayStartResponse start(@DestinationVariable String matchId,
+        SimpMessageHeaderAccessor accessor) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
         PlayStartResponse response = matchService.start(characterId, Long.parseLong(matchId));
         return response;
@@ -52,15 +55,18 @@ public class PlayController {
 
     @MessageMapping("game/turn/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayTurnResponse turnGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor, PlayTurnRequest playTurnRequest){
+    private PlayTurnResponse turnGame(@DestinationVariable String matchId,
+        SimpMessageHeaderAccessor accessor, PlayTurnRequest playTurnRequest) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayTurnResponse response = matchService.turnGame(characterId, Long.parseLong(matchId), playTurnRequest);
+        PlayTurnResponse response = matchService.turnGame(characterId, Long.parseLong(matchId),
+            playTurnRequest);
         return response;
     }
 
     @MessageMapping("game/end/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayEndResponse endGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+    private PlayEndResponse endGame(@DestinationVariable String matchId,
+        SimpMessageHeaderAccessor accessor) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
         PlayEndResponse response = matchService.endGame(characterId, Long.parseLong(matchId));
         return response;
@@ -68,15 +74,18 @@ public class PlayController {
 
     @MessageMapping("game/surrender/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlaySurrenderResponse surrenderGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+    private PlaySurrenderResponse surrenderGame(@DestinationVariable String matchId,
+        SimpMessageHeaderAccessor accessor) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlaySurrenderResponse response = matchService.surrenderGame(characterId, Long.parseLong(matchId));
+        PlaySurrenderResponse response = matchService.surrenderGame(characterId,
+            Long.parseLong(matchId));
         return response;
     }
 
     @MessageMapping("game/quit/{matchId}")
     @SendTo("/topic/{matchId}/message")
-    private PlayQuitResponse quitGame(@DestinationVariable String matchId, SimpMessageHeaderAccessor accessor){
+    private PlayQuitResponse quitGame(@DestinationVariable String matchId,
+        SimpMessageHeaderAccessor accessor) {
         Long characterId = extractCharacterIdFromAccessor(accessor);
         PlayQuitResponse response = matchService.quitGame(characterId, Long.parseLong(matchId));
         return response;

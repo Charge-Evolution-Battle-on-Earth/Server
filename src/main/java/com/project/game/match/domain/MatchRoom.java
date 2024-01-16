@@ -1,7 +1,9 @@
 package com.project.game.match.domain;
 
 import static com.project.game.match.vo.MatchStatus.WAITING;
-import static com.project.game.match.vo.PlayerType.*;
+import static com.project.game.match.vo.PlayerType.ENTRANT;
+import static com.project.game.match.vo.PlayerType.HOST;
+import static com.project.game.match.vo.PlayerType.NONE;
 import static com.project.game.skill.domain.SkillEffect.makeEffectValue;
 import static com.project.game.skill.vo.SkillEffectType.DAMAGE;
 import static com.project.game.skill.vo.SkillEffectType.HEAL;
@@ -32,7 +34,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 @Entity(name = "match_room")
 @Getter
@@ -88,76 +89,81 @@ public class MatchRoom extends BaseEntity {
     })
     private Stat entrantStat;
 
-    @Column(name="host_start_hp")
+    @Column(name = "host_start_hp")
     private Integer hostStartHp;
 
-    @Column(name="entrant_start_hp")
+    @Column(name = "entrant_start_hp")
     private Integer entrantStartHp;
 
     /**
-     * 게임 승리 시 획득 Gold
-     * 기본 금액 * level
+     * 게임 승리 시 획득 Gold 기본 금액 * level
+     *
      * @param level
      * @return
      */
-    public static Integer makeStakedGold(Integer level){
+    public static Integer makeStakedGold(Integer level) {
         return defaultStakedGold * level;
     }
 
-    public PlayerType getWinnerType(){
+    public PlayerType getWinnerType() {
         Integer hostHp = this.hostStat.getHp();
         Integer entrantHp = this.entrantStat.getHp();
 
-        if(hostHp > entrantHp && entrantHp <= 0){
+        if (hostHp > entrantHp && entrantHp <= 0) {
             return HOST;
-        }else if(hostHp < entrantHp && hostHp <= 0){
+        } else if (hostHp < entrantHp && hostHp <= 0) {
             return ENTRANT;
-        }else{
+        } else {
             throw new MatchRoomNotFinished();
         }
     }
 
-    public Integer getWinnerGold(Integer levelId){
+    public Integer getWinnerGold(Integer levelId) {
         return this.stakedGold * levelId;
     }
 
-    public Integer getLoserGold(Integer levelId){
+    public Integer getLoserGold(Integer levelId) {
         return this.stakedGold * levelId / loserGoldDivisor;
     }
 
-    public Character getWinner(){
+    public Character getWinner() {
         Integer hostHp = this.hostStat.getHp();
         Integer entrantHp = this.entrantStat.getHp();
 
-        if(hostHp > entrantHp && entrantHp <= 0){
+        if (hostHp > entrantHp && entrantHp <= 0) {
             return this.host;
-        }else if(hostHp < entrantHp && hostHp <= 0){
+        } else if (hostHp < entrantHp && hostHp <= 0) {
             return this.entrant;
-        }else{
+        } else {
             throw new MatchRoomNotFinished();
         }
     }
 
-    public Character getLoser(){
+    public Character getLoser() {
         Integer hostHp = this.hostStat.getHp();
         Integer entrantHp = this.entrantStat.getHp();
 
-        if(hostHp < entrantHp && hostHp <= 0){
+        if (hostHp < entrantHp && hostHp <= 0) {
             return this.host;
-        }else if(hostHp > entrantHp && entrantHp <= 0){
+        } else if (hostHp > entrantHp && entrantHp <= 0) {
             return this.entrant;
-        }else{
+        } else {
             throw new PlayerTypeInvalidException();
         }
     }
 
-    public PlayerType getPlayerType(Long characterId){
-        if(this.host.getCharacterId() == characterId) return HOST;
-        else if(this.entrant.getCharacterId() == characterId) return ENTRANT;
-        else return NONE;
+    public PlayerType getPlayerType(Long characterId) {
+        if (this.host.getCharacterId() == characterId) {
+            return HOST;
+        } else if (this.entrant.getCharacterId() == characterId) {
+            return ENTRANT;
+        } else {
+            return NONE;
+        }
     }
 
-    public void effectSkillCast(Stat casterStat, Stat targetStat, Integer casterStartHp, SkillEffect effect) {
+    public void effectSkillCast(Stat casterStat, Stat targetStat, Integer casterStartHp,
+        SkillEffect effect) {
         int effectValue = makeEffectValue(casterStat, effect);
 
         casterStat.minusMp(effect.getManaCost());
@@ -177,33 +183,33 @@ public class MatchRoom extends BaseEntity {
         effectSkillCast(hostStat, entrantStat, hostStartHp, effect);
     }
 
-    public void setEntrant(Character entrant){
+    public void setEntrant(Character entrant) {
         this.entrant = entrant;
     }
 
-    public void setHost(Character host){
+    public void setHost(Character host) {
         this.host = host;
     }
 
-    public void setMatchStatus(MatchStatus matchStatus){
+    public void setMatchStatus(MatchStatus matchStatus) {
         this.matchStatus = matchStatus;
     }
 
-    public void setTurnOwner(PlayerType turnOwner){
+    public void setTurnOwner(PlayerType turnOwner) {
         this.turnOwner = turnOwner;
     }
 
-    public void setHostStatAndStartHp(Stat hostStat){
+    public void setHostStatAndStartHp(Stat hostStat) {
         this.hostStat = hostStat;
         this.hostStartHp = hostStat.getHp();
     }
 
-    public void setEntrantStatAndStartHp(Stat entrantStat){
+    public void setEntrantStatAndStartHp(Stat entrantStat) {
         this.entrantStat = entrantStat;
         this.entrantStartHp = entrantStat.getHp();
     }
 
-    public void setInitMatchRoom(){
+    public void setInitMatchRoom() {
         this.matchStatus = WAITING;
         this.turnOwner = NONE;
         setHostStatAndStartHp(new Stat());
@@ -212,25 +218,26 @@ public class MatchRoom extends BaseEntity {
 
     /**
      * 양 플레이어의 체력 상황을 체크하여 게임 종료 여부 확인
+     *
      * @return true: game over, false: game continue
      */
-    public Boolean isGameOverWithStat(){
+    public Boolean isGameOverWithStat() {
         int hostStatus = this.hostStat.getHp().compareTo(0);
         int entrantStatus = this.entrantStat.getHp().compareTo(0);
 
-        if(hostStatus < 1 || entrantStatus < 1){
+        if (hostStatus < 1 || entrantStatus < 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public PlayerType getToggleTurnOwner(){
-        if(this.turnOwner == HOST){
+    public PlayerType getToggleTurnOwner() {
+        if (this.turnOwner == HOST) {
             return ENTRANT;
         } else if (this.turnOwner == ENTRANT) {
             return HOST;
-        }else{
+        } else {
             throw new PlayerTypeInvalidException();
         }
     }

@@ -9,7 +9,7 @@ public class SkillNotFoundException extends EntityNotFoundException {
     }
 
     public SkillNotFoundException(Long id) {
-        super("Could not find Skill: "+id);
+        super("Could not find Skill: " + id);
     }
 
 }

@@ -40,7 +40,8 @@ public class UserController {
     }
 
     @PostMapping("/character")
-    private ResponseEntity<UserCharacterUpsertResponse> joinCharacter(@RequestBody UserCharacterUpsertRequest dto) {
+    private ResponseEntity<UserCharacterUpsertResponse> joinCharacter(
+        @RequestBody UserCharacterUpsertRequest dto) {
         UserCharacterUpsertResponse response = userService.joinCharacter(dto);
         return ResponseEntity.ok(response);
     }
@@ -53,7 +54,8 @@ public class UserController {
 
     //TODO refresh token 적용 후 작업 예정
     @PostMapping("/logout")
-    private ResponseEntity<Void> logout(HttpServletRequest request, @RequestBody UserLogoutRequest dto) {
+    private ResponseEntity<Void> logout(HttpServletRequest request,
+        @RequestBody UserLogoutRequest dto) {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

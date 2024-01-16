@@ -22,7 +22,7 @@ public class NationServiceImpl implements NationService {
 
     @Override
     public List<NationGetListResponse> getNationList() {
-        List<Nation> nations = nationRepository.findAll();
+        List<Nation> nations = nationRepository.findAllByOrderByNationIdAsc();
         List<NationGetListResponse> nationResponseList = nations.stream().map(
             nation -> new NationGetListResponse(nation)
         ).collect(Collectors.toList());
@@ -33,7 +33,7 @@ public class NationServiceImpl implements NationService {
     public NationUpsertResponse saveNation(NationUpsertRequest dto) {
         Optional<Nation> findNation = nationRepository.findByNationNm(dto.getNationNm());
 
-        if(findNation.isPresent()){
+        if (findNation.isPresent()) {
             throw new NationInvalidException();
         }
         Nation nation = nationRepository.save(toEntity(dto));

@@ -12,7 +12,7 @@ public class UserUpsertRequest {
     private String password;
     private String nickname;
 
-    public static User userUpsertToEntity(UserUpsertRequest dto){
+    public static User userUpsertToEntity(UserUpsertRequest dto) {
         return User.builder()
             .email(dto.getEmail())
             .password(sha256Encode(dto.getPassword()))

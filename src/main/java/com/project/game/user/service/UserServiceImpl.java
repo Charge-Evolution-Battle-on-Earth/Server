@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         //중복 체크
         Optional<User> user = userRepository.findByEmail(dto.getEmail());
 
-        if(user.isPresent()){
+        if (user.isPresent()) {
             throw new UserInvalidException();
         }
 
@@ -72,7 +72,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginResponse login(UserLoginRequest dto) {
-        User loginUser = userRepository.findByEmailAndPassword(dto.getEmail(), sha256Encode(dto.getPassword())).orElseThrow(()-> new UserNotFoundException());
+        User loginUser = userRepository.findByEmailAndPassword(dto.getEmail(),
+            sha256Encode(dto.getPassword())).orElseThrow(() -> new UserNotFoundException());
 
         Character character = characterRepository.findByUserUserId(loginUser.getUserId());
 
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String generateAccessToken(Long characterId) {
         Claims claims = Jwts.claims();
-        claims.put("characterId",characterId);
+        claims.put("characterId", characterId);
 
         return createToken(
             claims,
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserService {
     public UserCharacterUpsertResponse joinCharacter(UserCharacterUpsertRequest dto) {
         User user = userRepository.findByUserId(dto.getUserId());
         Job job = jobRepository.findById(dto.getJobId())
-            .orElseThrow(()->new JobNotFoundException(dto.getJobId()));
+            .orElseThrow(() -> new JobNotFoundException(dto.getJobId()));
         Nation nation = nationRepository.findById(dto.getNationId())
             .orElseThrow(() -> new NationNotFoundException(dto.getNationId()));
 

@@ -153,12 +153,12 @@ public class MatchRoom extends BaseEntity {
     }
 
     public PlayerType getPlayerType(Long characterId) {
-        if (this.host.getCharacterId() == characterId) {
+        if (characterId == this.host.getCharacterId()) {
             return HOST;
-        } else if (this.entrant.getCharacterId() == characterId) {
+        } else if (characterId == this.entrant.getCharacterId()) {
             return ENTRANT;
         } else {
-            return NONE;
+            throw new PlayerTypeInvalidException(characterId);
         }
     }
 

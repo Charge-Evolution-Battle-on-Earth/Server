@@ -21,7 +21,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/play")
             .setAllowedOriginPatterns("*")
             .withSockJS();
-
     }
 
     @Override

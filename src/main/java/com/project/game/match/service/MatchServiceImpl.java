@@ -30,7 +30,6 @@ import com.project.game.match.exception.MatchRoomDuplicateParticipantException;
 import com.project.game.match.exception.MatchRoomFullException;
 import com.project.game.match.exception.MatchRoomNotFoundException;
 import com.project.game.match.exception.MatchRoomTurnInvalidException;
-import com.project.game.match.exception.PlayerTypeInvalidException;
 import com.project.game.match.exception.PlayerTypeNotHostException;
 import com.project.game.match.repository.MatchHistoryRepository;
 import com.project.game.match.repository.MatchRoomRepository;
@@ -131,6 +130,14 @@ public class MatchServiceImpl implements MatchService {
         return new MatchRoomEnterResponse(matchRoom);
     }
 
+    /**
+     * ready를 시도한 사용자의 준비 상태를 토글하여 matchRoom의 host 혹은 entrant의 준비 상태 변경
+     *
+     * @param characterId
+     * @param matchId
+     * @param playReadyRequest
+     * @return PlayReadyResponse
+     */
     @Override
     @Transactional
     public PlayReadyResponse ready(Long characterId, Long matchId,
@@ -141,19 +148,9 @@ public class MatchServiceImpl implements MatchService {
 
         Boolean selfReadyStatus = playReadyRequest.getToggleSelfReadyStatus();
         Boolean opponentReadyStatus = playReadyRequest.getOpponentReadyStatus();
-        Boolean hostReadyStatus;
-        Boolean entrantReadyStatus;
-
-        //플레이어 타입 별 준비 상태 set
-        if (playerType.equals(HOST)) {
-            hostReadyStatus = selfReadyStatus;
-            entrantReadyStatus = opponentReadyStatus;
-        } else if (playerType.equals(ENTRANT)) {
-            hostReadyStatus = opponentReadyStatus;
-            entrantReadyStatus = selfReadyStatus;
-        } else {
-            throw new PlayerTypeInvalidException(characterId);
-        }
+        Boolean hostReadyStatus = playerType.equals(HOST) ? selfReadyStatus : opponentReadyStatus;
+        Boolean entrantReadyStatus =
+            playerType.equals(ENTRANT) ? selfReadyStatus : opponentReadyStatus;
 
         //매치 방 상태 변경
         if (hostReadyStatus && entrantReadyStatus) {
@@ -177,13 +174,13 @@ public class MatchServiceImpl implements MatchService {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
-        Character host = matchRoom.getHost();
-        Character entrant = matchRoom.getEntrant();
-
         //READY 이외의 상태일 경우 예외 처리
         if (!matchRoom.getMatchStatus().equals(READY)) {
             throw new MatchStatusInvalidException(matchId);
         }
+
+        Character host = matchRoom.getHost();
+        Character entrant = matchRoom.getEntrant();
 
         //Player1, Player2 스탯과 스킬 리스트
         Stat hostTotalStat = characterService.getCharacterTotalStat(host);

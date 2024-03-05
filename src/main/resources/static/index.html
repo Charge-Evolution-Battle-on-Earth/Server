@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <title>Hello2</title>
 </head>
 <body>
@@ -9,13 +9,13 @@
 <h3 th:text="${uname}"></h3>
 
 <div class="well">
-  <input type="text" id="msg" value="1212" class="form-control" />
+  <input type="text" id="msg" value="1212" class="form-control"/>
   <button id="btnSend" class="btn btn-primary">Send Message</button>
 </div>
 
 <p th:text="'Name: ' + ${name}"></p>
 <form method="POST" action="korean">
-  <input type="text" name="name" value="세종대왕" />
+  <input type="text" name="name" value="세종대왕"/>
   <button type="submit">KOREAN</button>
 </form>
 
@@ -58,7 +58,7 @@ $(document).ready(  function() {
 
         let msg = $('input#msg').val();
         console.log("mmmmmmmmmmmm>>", msg)
-        let apiUrl = '/game/end/' + 14
+        let apiUrl = '/game/greeting/' + 14
         if (isStomp)
         	socket.send(apiUrl, {}, JSON.stringify({}));
         	//socket.send(apiUrl, {}, JSON.stringify({skillId: '3'}));
@@ -139,6 +139,8 @@ function connectWS() {
     };
     ws.onerror = function (err) { console.log('Error:', err); };
 }
+
+
 </script>
 </body>
 </html>

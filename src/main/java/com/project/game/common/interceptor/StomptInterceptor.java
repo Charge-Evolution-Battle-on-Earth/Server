@@ -2,7 +2,6 @@ package com.project.game.common.interceptor;
 
 import static com.project.game.common.util.JwtUtil.isExpired;
 
-import com.project.game.match.service.MatchService;
 import com.project.game.user.service.UserService;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,8 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
+
+//TODO 추후 STOMP 관련 코드 제거
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,10 +36,10 @@ public class StomptInterceptor implements ChannelInterceptor {
 
             List<String> authenticationHeaders = headerAccessor.getNativeHeader("Authorization");
 
-            if(authenticationHeaders != null && !authenticationHeaders.isEmpty()){
+            if (authenticationHeaders != null && !authenticationHeaders.isEmpty()) {
                 String authorization = authenticationHeaders.get(0);
 
-                if(authorization == null || !authorization.startsWith("Bearer ")) {
+                if (authorization == null || !authorization.startsWith("Bearer ")) {
                     throw new IllegalStateException();
                 }
 
@@ -56,7 +57,8 @@ public class StomptInterceptor implements ChannelInterceptor {
             }
         }
 
-        message = MessageBuilder.createMessage(message.getPayload(), accessor.toMessageHeaders());;
+        message = MessageBuilder.createMessage(message.getPayload(), accessor.toMessageHeaders());
+        ;
 
         return message;
     }

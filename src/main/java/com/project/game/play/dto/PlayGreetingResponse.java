@@ -1,6 +1,5 @@
 package com.project.game.play.dto;
 
-import com.project.game.match.vo.PlayerType;
 import lombok.Getter;
 
 @Getter

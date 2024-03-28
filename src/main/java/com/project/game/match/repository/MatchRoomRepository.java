@@ -14,4 +14,5 @@ public interface MatchRoomRepository extends JpaRepository<MatchRoom, Long> {
         nativeQuery = true
     )
     Slice<MatchRoom> findAllByPaging(Pageable pageable);
+
 }

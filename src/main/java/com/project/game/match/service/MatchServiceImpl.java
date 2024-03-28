@@ -23,6 +23,7 @@ import com.project.game.match.domain.MatchRoom;
 import com.project.game.match.dto.MatchRoomEnterRequest;
 import com.project.game.match.dto.MatchRoomEnterResponse;
 import com.project.game.match.dto.MatchRoomGetResponse;
+import com.project.game.match.dto.MatchRoomPlayerGetResponse;
 import com.project.game.match.dto.MatchRoomUpsertResponse;
 import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.match.exception.LevelDifferenceInvalidException;
@@ -49,6 +50,7 @@ import com.project.game.skill.dto.SkillNotFoundException;
 import com.project.game.skill.repository.SkillEffectRepository;
 import com.project.game.skill.repository.SkillRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,6 +77,15 @@ public class MatchServiceImpl implements MatchService {
     private Integer winExp;
     @Value("${game.lose-exp}")
     private Integer loseExp;
+
+    @Override
+    public MatchRoomPlayerGetResponse findPlayerByMatchId(Long matchId) {
+        MatchRoom matchRoom = matchRoomRepository.findById(matchId)
+            .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
+
+        return new MatchRoomPlayerGetResponse(matchRoom.getHost().getCharacterId(),
+            matchRoom.getEntrant().getCharacterId());
+    }
 
     @Override
     public Slice<MatchRoomGetResponse> findMatchRoomList(Pageable pageable) {
@@ -114,7 +125,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         //조건 2. 자신이 이미 방에 참여 중인 경우 참여자로 입장할 수없다.
-        if (matchRoom.getHost().getCharacterId() == characterId) {
+        if (Objects.equals(matchRoom.getHost().getCharacterId(), characterId)) {
             throw new MatchRoomDuplicateParticipantException(characterId);
         }
 
@@ -305,7 +316,7 @@ public class MatchServiceImpl implements MatchService {
         Character loser;
 
         PlayerType winnerType = playerType;
-        PlayerType loserType = togglePlayerType(playerType);
+        PlayerType loserType = togglePlayerType(winnerType);
 
         if (winnerType == HOST) {
             winner = matchRoom.getHost();

@@ -24,7 +24,7 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-        WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+        WebSocketHandler wsHandler, Map<String, Object> attributes) throws RuntimeException {
         List<String> authenticationHeaders = request.getHeaders().get("Authorization");
 
         if (authenticationHeaders != null && !authenticationHeaders.isEmpty()) {
@@ -50,6 +50,5 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
         WebSocketHandler wsHandler, Exception exception) {
-
     }
 }

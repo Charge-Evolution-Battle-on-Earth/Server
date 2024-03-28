@@ -3,6 +3,7 @@ package com.project.game.match.service;
 import com.project.game.match.dto.MatchRoomEnterRequest;
 import com.project.game.match.dto.MatchRoomEnterResponse;
 import com.project.game.match.dto.MatchRoomGetResponse;
+import com.project.game.match.dto.MatchRoomPlayerGetResponse;
 import com.project.game.match.dto.MatchRoomUpsertResponse;
 import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.play.dto.PlayEndResponse;
@@ -18,11 +19,14 @@ import org.springframework.data.domain.Slice;
 
 public interface MatchService {
 
+    MatchRoomPlayerGetResponse findPlayerByMatchId(Long matchId);
+
     Slice<MatchRoomGetResponse> findMatchRoomList(Pageable pageable);
 
     MatchRoomUpsertResponse saveMatchRoom(Long characterId);
 
-    MatchRoomEnterResponse enterMatchRoom(Long characterId, MatchRoomEnterRequest matchRoomEnterRequest);
+    MatchRoomEnterResponse enterMatchRoom(Long characterId,
+        MatchRoomEnterRequest matchRoomEnterRequest);
 
     PlayReadyResponse ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest);
 

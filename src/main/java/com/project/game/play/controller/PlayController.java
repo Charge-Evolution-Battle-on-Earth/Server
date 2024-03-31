@@ -1,7 +1,6 @@
 package com.project.game.play.controller;
 
-import static com.project.game.common.util.SimpMessageHeaderAccessorUtil.extractCharacterIdFromAccessor;
-
+import com.project.game.common.util.JsonUtil;
 import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.match.service.MatchService;
 import com.project.game.play.dto.PlayEndResponse;
@@ -13,81 +12,47 @@ import com.project.game.play.dto.PlaySurrenderResponse;
 import com.project.game.play.dto.PlayTurnRequest;
 import com.project.game.play.dto.PlayTurnResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
-@Controller
+@Component
 @RequiredArgsConstructor
 public class PlayController {
 
     private final MatchService matchService;
+    private final JsonUtil jsonUtil;
 
-    @MessageMapping("/greeting/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlayGreetingResponse greeting(SimpMessageHeaderAccessor accessor) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        //TODO 메세지 관리 방법 고민
+    public String greeting(Long characterId) throws RuntimeException {
         PlayGreetingResponse response = matchService.greeting(characterId);
-        return response;
+        return jsonUtil.toJson(response);
     }
 
-    @MessageMapping("ready/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlayReadyResponse ready(@DestinationVariable String matchId,
-        SimpMessageHeaderAccessor accessor, PlayReadyRequest playReadyRequest) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayReadyResponse response = matchService.ready(characterId, Long.parseLong(matchId),
-            playReadyRequest);
-        return response;
+    public String ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest) {
+        PlayReadyResponse response = matchService.ready(characterId, matchId, playReadyRequest);
+        return jsonUtil.toJson(response);
     }
 
-    @MessageMapping("start/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlayStartResponse start(@DestinationVariable String matchId,
-        SimpMessageHeaderAccessor accessor) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayStartResponse response = matchService.start(characterId, Long.parseLong(matchId));
-        return response;
+    public String start(Long characterId, Long matchId) {
+        PlayStartResponse response = matchService.start(characterId, matchId);
+        return jsonUtil.toJson(response);
     }
 
-    @MessageMapping("game/turn/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlayTurnResponse turnGame(@DestinationVariable String matchId,
-        SimpMessageHeaderAccessor accessor, PlayTurnRequest playTurnRequest) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayTurnResponse response = matchService.turnGame(characterId, Long.parseLong(matchId),
-            playTurnRequest);
-        return response;
+    public String turnGame(Long characterId, Long matchId, PlayTurnRequest playTurnRequest) {
+        PlayTurnResponse response = matchService.turnGame(characterId, matchId, playTurnRequest);
+        return jsonUtil.toJson(response);
     }
 
-    @MessageMapping("game/end/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlayEndResponse endGame(@DestinationVariable String matchId,
-        SimpMessageHeaderAccessor accessor) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayEndResponse response = matchService.endGame(characterId, Long.parseLong(matchId));
-        return response;
+    public String endGame(Long characterId, Long matchId) {
+        PlayEndResponse response = matchService.endGame(characterId, matchId);
+        return jsonUtil.toJson(response);
     }
 
-    @MessageMapping("game/surrender/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlaySurrenderResponse surrenderGame(@DestinationVariable String matchId,
-        SimpMessageHeaderAccessor accessor) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlaySurrenderResponse response = matchService.surrenderGame(characterId,
-            Long.parseLong(matchId));
-        return response;
+    public String surrenderGame(Long characterId, Long matchId) {
+        PlaySurrenderResponse response = matchService.surrenderGame(characterId, matchId);
+        return jsonUtil.toJson(response);
     }
 
-    @MessageMapping("game/quit/{matchId}")
-    @SendTo("/topic/{matchId}/message")
-    private PlayQuitResponse quitGame(@DestinationVariable String matchId,
-        SimpMessageHeaderAccessor accessor) {
-        Long characterId = extractCharacterIdFromAccessor(accessor);
-        PlayQuitResponse response = matchService.quitGame(characterId, Long.parseLong(matchId));
-        return response;
+    public String quitGame(Long characterId, Long matchId) {
+        PlayQuitResponse response = matchService.quitGame(characterId, matchId);
+        return jsonUtil.toJson(response);
     }
 }

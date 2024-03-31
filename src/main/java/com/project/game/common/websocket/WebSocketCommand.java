@@ -5,6 +5,11 @@ import java.util.Arrays;
 public enum WebSocketCommand {
     GREETING("GREETING"),
     READY("READY"),
+    START("START"),
+    TURN_GAME("TURN_GAME"),
+    END_GAME("END_GAME"),
+    SURRENDER_GAME("SURRENDER_GAME"),
+    QUIT_GAME("QUIT_GAME"),
     EMPTY("EMPTY");
 
     private final String command;

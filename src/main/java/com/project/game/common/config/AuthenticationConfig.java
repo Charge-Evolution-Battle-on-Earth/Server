@@ -31,8 +31,7 @@ public class AuthenticationConfig {
                     .requestMatchers("/users/**").permitAll()
                     .requestMatchers("/nations").permitAll()    //정보성 데이터 허용
                     .requestMatchers("/jobs").permitAll()   //정보성 데이터 허용
-                    .requestMatchers("/index.html").permitAll()   //stomp 테스트 페이지 요청 허용
-                    .requestMatchers("/play/**").permitAll()   //stomp 요청 허용
+                    .requestMatchers("/play").permitAll()   //WebSocket 연결 허용
                     //.anyRequest().permitAll()
                     .anyRequest().authenticated()
             )

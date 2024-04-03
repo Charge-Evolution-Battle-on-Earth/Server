@@ -9,6 +9,6 @@ public class InvalidWebSocketMessageException extends WebSocketException {
     }
 
     public InvalidWebSocketMessageException(Long matchId, List<Long> playerIds) {
-        super("[matchId]: " + matchId + "Invalid WebSocket Message", playerIds);
+        super("Invalid WebSocket Message [matchId]: " + matchId, playerIds);
     }
 }

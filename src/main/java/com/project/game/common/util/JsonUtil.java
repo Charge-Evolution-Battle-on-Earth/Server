@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.project.game.common.exception.ValueInvalidException;
-import com.project.game.common.websocket.JsonProperty;
+import com.project.game.websocket.constant.WebSocketMessageProtocol;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class JsonUtil {
 
     private final Gson gson = new Gson();
 
-    public <T> T extractProperty(JsonObject jsonObject, JsonProperty key,
+    public <T> T extractProperty(JsonObject jsonObject, WebSocketMessageProtocol key,
         Class<T> clazz) throws RuntimeException {
         JsonElement jsonElement = jsonObject.get(key.getProperty());
 

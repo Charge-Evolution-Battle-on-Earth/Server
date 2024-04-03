@@ -1,4 +1,4 @@
-package com.project.game.common.websocket;
+package com.project.game.websocket.constant;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package com.project.game.common.config;
+package com.project.game.common.aop;
 
 import static com.project.game.common.util.JwtUtil.isExpired;
 
@@ -33,8 +33,8 @@ public class JwtFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(authorization == null || !authorization.startsWith("Bearer ")) {
-            filterChain.doFilter(request,response);
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -47,10 +47,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         Long characterId = userService.getCharacterIdByToken(token, secretKey);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(characterId,null,
+        Authentication authentication = new UsernamePasswordAuthenticationToken(characterId, null,
             Collections.singleton(new SimpleGrantedAuthority("USER")));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

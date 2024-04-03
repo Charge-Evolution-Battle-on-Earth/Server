@@ -9,7 +9,7 @@ public class WebSocketSessionInvalidException extends WebSocketException {
     }
 
     public WebSocketSessionInvalidException(Long matchId, List<Long> playerIds) {
-        super("[matchId]: " + matchId + "WebSocketSession Invalid", playerIds);
+        super("WebSocketSession Invalid [matchId]: " + matchId, playerIds);
     }
 
 }

@@ -9,6 +9,6 @@ public class CharacterNotInMatchException extends WebSocketException {
     }
 
     public CharacterNotInMatchException(Long matchId, List<Long> playerIds) {
-        super("[matchId]: " + matchId + "Your Character is not in Match", playerIds);
+        super("Your Character is not in Match [matchId]: " + matchId, playerIds);
     }
 }

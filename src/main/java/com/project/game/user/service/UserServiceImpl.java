@@ -3,6 +3,7 @@ package com.project.game.user.service;
 import static com.project.game.common.util.JwtUtil.createToken;
 import static com.project.game.common.util.JwtUtil.parse;
 import static com.project.game.common.util.ShaUtil.sha256Encode;
+import static com.project.game.level.domain.AccessLevel.LEVEL_ONE;
 import static com.project.game.user.dto.UserUpsertRequest.userUpsertToEntity;
 
 import com.project.game.character.domain.Character;
@@ -17,19 +18,20 @@ import com.project.game.nation.exception.NationNotFoundException;
 import com.project.game.nation.repository.NationRepository;
 import com.project.game.skill.domain.Skill;
 import com.project.game.skill.repository.SkillRepository;
+import com.project.game.user.domain.User;
 import com.project.game.user.dto.UserCharacterUpsertRequest;
 import com.project.game.user.dto.UserCharacterUpsertResponse;
 import com.project.game.user.dto.UserLoginRequest;
 import com.project.game.user.dto.UserLoginResponse;
 import com.project.game.user.dto.UserResponse;
 import com.project.game.user.dto.UserUpsertRequest;
-import com.project.game.user.domain.User;
 import com.project.game.user.dto.UserUpsertResponse;
 import com.project.game.user.exception.UserInvalidException;
 import com.project.game.user.exception.UserNotFoundException;
 import com.project.game.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,12 +116,15 @@ public class UserServiceImpl implements UserService {
 
         Character savedCharacter = characterRepository.saveAndFlush(character);
 
-        //TODO 계정 생성 시 나라별 스킬 2개를 추가로 배우도록 수정
-        Skill defaultSkill = skillRepository.findDefaultSkill(character.getNation().getNationId());
-        CharacterSkill characterSkill = CharacterSkill.builder().character(savedCharacter)
-            .skill(defaultSkill).build();
+        List<Skill> skills = skillRepository.findByNationIdAndLevelId(
+            character.getNation().getNationId(), LEVEL_ONE.getLevel());
 
-        characterSkillRepository.save(characterSkill);
+        skills.forEach(skill -> {
+            CharacterSkill characterSkill = CharacterSkill.builder().character(savedCharacter)
+                .skill(skill).build();
+
+            characterSkillRepository.save(characterSkill);
+        });
 
         return new UserCharacterUpsertResponse(savedCharacter, generateAccessToken(
             savedCharacter.getCharacterId()));

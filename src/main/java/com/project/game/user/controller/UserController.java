@@ -39,6 +39,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 회원 가입 중 발생되는 이벤트. JWT 토큰이 캐릭터를 기준으로 생성되므로 user 도메인에서 저장
+     */
     @PostMapping("/character")
     private ResponseEntity<UserCharacterUpsertResponse> joinCharacter(
         @RequestBody UserCharacterUpsertRequest dto) {

@@ -23,7 +23,7 @@ import com.project.game.match.domain.MatchRoom;
 import com.project.game.match.dto.MatchRoomEnterRequest;
 import com.project.game.match.dto.MatchRoomEnterResponse;
 import com.project.game.match.dto.MatchRoomGetResponse;
-import com.project.game.match.dto.MatchRoomPlayerGetResponse;
+import com.project.game.match.vo.MatchPlayer;
 import com.project.game.match.dto.MatchRoomUpsertResponse;
 import com.project.game.match.dto.PlayQuitResponse;
 import com.project.game.match.exception.LevelDifferenceInvalidException;
@@ -79,18 +79,17 @@ public class MatchServiceImpl implements MatchService {
     private Integer loseExp;
 
     @Override
-    public MatchRoomPlayerGetResponse findPlayerByMatchId(Long matchId) throws RuntimeException {
+    public MatchPlayer findPlayerByMatchId(Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
-        return new MatchRoomPlayerGetResponse(
+        return new MatchPlayer(
             matchRoom.getHost() != null ? matchRoom.getHost().getCharacterId() : null,
             matchRoom.getEntrant() != null ? matchRoom.getEntrant().getCharacterId() : null);
     }
 
     @Override
-    public Slice<MatchRoomGetResponse> findMatchRoomList(Pageable pageable)
-        throws RuntimeException {
+    public Slice<MatchRoomGetResponse> findMatchRoomList(Pageable pageable) {
         Slice<MatchRoom> matchRooms = matchRoomRepository.findAllByPaging(pageable);
         List<MatchRoomGetResponse> responseList = matchRooms.stream()
             .map(matchRoom -> new MatchRoomGetResponse(matchRoom)).collect(
@@ -100,7 +99,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public MatchRoomUpsertResponse saveMatchRoom(Long characterId) throws RuntimeException {
+    public MatchRoomUpsertResponse saveMatchRoom(Long characterId) {
         Character host = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
         MatchRoom matchRoom = matchRoomRepository.save(
@@ -113,7 +112,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @Transactional
     public MatchRoomEnterResponse enterMatchRoom(Long characterId,
-        MatchRoomEnterRequest matchRoomEnterRequest) throws RuntimeException {
+        MatchRoomEnterRequest matchRoomEnterRequest) {
         Character entrant = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
         MatchRoom matchRoom = matchRoomRepository.findById(matchRoomEnterRequest.getMatchRoomId())
@@ -154,7 +153,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @Transactional
     public PlayReadyResponse ready(Long characterId, Long matchId,
-        PlayReadyRequest playReadyRequest) throws RuntimeException {
+        PlayReadyRequest playReadyRequest) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
         PlayerType playerType = matchRoom.getPlayerType(characterId);
@@ -181,19 +180,20 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public PlayGreetingResponse greeting(Long characterId) throws RuntimeException {
+    public PlayGreetingResponse greeting(Long characterId) {
         return new PlayGreetingResponse(characterId + "님이 입장하였습니다.");
     }
 
     @Override
     @Transactional
-    public PlayStartResponse start(Long characterId, Long matchId) throws RuntimeException {
+    public PlayStartResponse start(Long characterId, Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
         //READY 이외의 상태일 경우 예외 처리
         if (!matchRoom.getMatchStatus().equals(READY)) {
-            throw new MatchStatusInvalidException(matchId);
+            throw new MatchStatusInvalidException(
+                matchId); //TODO WebSocketException 상속 후, 예외 처리 하자!!
         }
 
         Character host = matchRoom.getHost();
@@ -227,7 +227,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @Transactional
     public PlayTurnResponse turnGame(Long characterId, Long matchId,
-        PlayTurnRequest playTurnRequest) throws RuntimeException {
+        PlayTurnRequest playTurnRequest) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
         Long skillId = playTurnRequest.getSkillId();
@@ -277,7 +277,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional
-    public PlayEndResponse endGame(Long characterId, Long matchId) throws RuntimeException {
+    public PlayEndResponse endGame(Long characterId, Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
@@ -306,8 +306,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public PlaySurrenderResponse surrenderGame(Long characterId, Long matchId)
-        throws RuntimeException {
+    public PlaySurrenderResponse surrenderGame(Long characterId, Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
@@ -340,7 +339,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional
-    public PlayQuitResponse quitGame(Long characterId, Long matchId) throws RuntimeException {
+    public PlayQuitResponse quitGame(Long characterId, Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
 
@@ -371,13 +370,8 @@ public class MatchServiceImpl implements MatchService {
 
     /**
      * 매칭 결과 정산 money & exp
-     *
-     * @param matchRoom
-     * @param winner
-     * @param loser
      */
-    private void processGameResult(MatchRoom matchRoom, Character winner, Character loser)
-        throws RuntimeException {
+    private void processGameResult(MatchRoom matchRoom, Character winner, Character loser) {
         Integer winnerGold = matchRoom.getWinnerGold(winner.getLevelId());
         Integer loserGold = matchRoom.getLoserGold(loser.getLevelId());
         Integer winnerExp = winExp;

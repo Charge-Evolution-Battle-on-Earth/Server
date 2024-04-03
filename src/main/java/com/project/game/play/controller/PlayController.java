@@ -21,39 +21,37 @@ public class PlayController {
     private final MatchService matchService;
     private final JsonUtil jsonUtil;
 
-    public String greeting(Long characterId) throws RuntimeException {
+    public String greeting(Long characterId) {
         PlayGreetingResponse response = matchService.greeting(characterId);
         return jsonUtil.toJson(response);
     }
 
-    public String ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest)
-        throws RuntimeException {
+    public String ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest) {
         PlayReadyResponse response = matchService.ready(characterId, matchId, playReadyRequest);
         return jsonUtil.toJson(response);
     }
 
-    public String start(Long characterId, Long matchId) throws RuntimeException {
+    public String start(Long characterId, Long matchId) {
         PlayStartResponse response = matchService.start(characterId, matchId);
         return jsonUtil.toJson(response);
     }
 
-    public String turnGame(Long characterId, Long matchId, PlayTurnRequest playTurnRequest)
-        throws RuntimeException {
+    public String turnGame(Long characterId, Long matchId, PlayTurnRequest playTurnRequest) {
         PlayTurnResponse response = matchService.turnGame(characterId, matchId, playTurnRequest);
         return jsonUtil.toJson(response);
     }
 
-    public String endGame(Long characterId, Long matchId) throws RuntimeException {
+    public String endGame(Long characterId, Long matchId) {
         PlayEndResponse response = matchService.endGame(characterId, matchId);
         return jsonUtil.toJson(response);
     }
 
-    public String surrenderGame(Long characterId, Long matchId) throws RuntimeException {
+    public String surrenderGame(Long characterId, Long matchId) {
         PlaySurrenderResponse response = matchService.surrenderGame(characterId, matchId);
         return jsonUtil.toJson(response);
     }
 
-    public String quitGame(Long characterId, Long matchId) throws RuntimeException {
+    public String quitGame(Long characterId, Long matchId) {
         PlayQuitResponse response = matchService.quitGame(characterId, matchId);
         return jsonUtil.toJson(response);
     }

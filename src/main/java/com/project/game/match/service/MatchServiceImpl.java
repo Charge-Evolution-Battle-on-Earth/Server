@@ -99,6 +99,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    @Transactional
     public MatchRoomUpsertResponse saveMatchRoom(Long characterId) {
         Character host = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
@@ -193,7 +194,7 @@ public class MatchServiceImpl implements MatchService {
         //READY 이외의 상태일 경우 예외 처리
         if (!matchRoom.getMatchStatus().equals(READY)) {
             throw new MatchStatusInvalidException(
-                matchId); //TODO WebSocketException 상속 후, 예외 처리 하자!!
+                matchId);
         }
 
         Character host = matchRoom.getHost();
@@ -220,7 +221,8 @@ public class MatchServiceImpl implements MatchService {
         matchRoom.setEntrantStatAndStartHp(entrantTotalStat);
         matchRoom.setMatchStatus(IN_PROGRESS);
 
-        return new PlayStartResponse(hostTotalStat, entrantTotalStat, hostSkillList,
+        return new PlayStartResponse(matchRoom.getMatchStatus(), hostTotalStat, entrantTotalStat,
+            hostSkillList,
             entrantSkillList, matchRoom.getTurnOwner());
     }
 
@@ -306,6 +308,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    @Transactional
     public PlaySurrenderResponse surrenderGame(Long characterId, Long matchId) {
         MatchRoom matchRoom = matchRoomRepository.findById(matchId)
             .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
@@ -371,6 +374,7 @@ public class MatchServiceImpl implements MatchService {
     /**
      * 매칭 결과 정산 money & exp
      */
+    @Transactional
     private void processGameResult(MatchRoom matchRoom, Character winner, Character loser) {
         Integer winnerGold = matchRoom.getWinnerGold(winner.getLevelId());
         Integer loserGold = matchRoom.getLoserGold(loser.getLevelId());

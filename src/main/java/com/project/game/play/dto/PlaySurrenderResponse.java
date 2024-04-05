@@ -16,8 +16,10 @@ public class PlaySurrenderResponse {
     private Integer loserTotalGold;
     private Integer winnerTotalExp;
     private Integer loserTotalExp;
+    private String message;
 
-    public PlaySurrenderResponse(PlayerType winnerType, PlayerType loserType, Character winner, Character loser, MatchRoom matchRoom) {
+    public PlaySurrenderResponse(PlayerType winnerType, PlayerType loserType, Character winner,
+        Character loser, MatchRoom matchRoom) {
         this.winnerType = winnerType;
         this.loserType = loserType;
         this.winnerGold = matchRoom.getWinnerGold(winner.getLevelId());
@@ -26,8 +28,7 @@ public class PlaySurrenderResponse {
         this.loserTotalGold = loser.getMoney();
         this.winnerTotalExp = winner.getExp();
         this.loserTotalExp = loser.getExp();
-        this.message = loser.getUser().getNickname()+" 항복\n"+"게임이 종료되었습니다.";
+        this.message = loser.getUser().getNickname() + " 항복\n" + "게임이 종료되었습니다.";
     }
 
-    private String message;
 }

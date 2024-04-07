@@ -37,9 +37,6 @@ public class SkillEffect extends BaseEntity {
     @Column(name = "skill_effect_type")
     private SkillEffectType skillEffectType;
 
-    @Column(name = "mana_cost")
-    private Integer manaCost;
-
     @Column(name = "fixed_value")
     private Integer fixedValue;
 
@@ -48,15 +45,20 @@ public class SkillEffect extends BaseEntity {
 
     /**
      * 고정 수치와 스킬 시전자의 Stat 비례 수치를 고려한 최종 스킬 효과 수치 반환
-     * @param turnOwnerStat 
+     *
+     * @param turnOwnerStat
      * @param effect
      * @return
      */
     public static Integer makeEffectValue(Stat turnOwnerStat, SkillEffect effect) {
-        double atkRelative = calculateRelativeValue(effect.getStatRate().getAtkRate(), turnOwnerStat.getAtk());
-        double hpRelative = calculateRelativeValue(effect.getStatRate().getHpRate(), turnOwnerStat.getHp());
-        double mpRelative = calculateRelativeValue(effect.getStatRate().getMpRate(), turnOwnerStat.getMp());
-        double spdRelative = calculateRelativeValue(effect.getStatRate().getSpdRate(), turnOwnerStat.getSpd());
+        double atkRelative = calculateRelativeValue(effect.getStatRate().getAtkRate(),
+            turnOwnerStat.getAtk());
+        double hpRelative = calculateRelativeValue(effect.getStatRate().getHpRate(),
+            turnOwnerStat.getHp());
+        double mpRelative = calculateRelativeValue(effect.getStatRate().getMpRate(),
+            turnOwnerStat.getMp());
+        double spdRelative = calculateRelativeValue(effect.getStatRate().getSpdRate(),
+            turnOwnerStat.getSpd());
 
         int effectValue = effect.getFixedValue() + roundToInt(atkRelative) +
             roundToInt(hpRelative) + roundToInt(mpRelative) + roundToInt(spdRelative);

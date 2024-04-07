@@ -1,7 +1,8 @@
 package com.project.game.websocket.aop;
 
+import com.project.game.common.util.JsonUtil;
+import com.project.game.websocket.dto.ErrorMassageResponse;
 import com.project.game.websocket.exception.WebSocketException;
-import com.project.game.websocket.WebSocketSessionManager;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,16 +19,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WebSocketExceptionAspect {
 
-    private final WebSocketSessionManager webSocketSessionManager;
+    private final JsonUtil jsonUtil;
 
     @Around("execution(* com.project.game.play.controller.PlayController.*(..))")
     public Object handleExceptionAndLog(ProceedingJoinPoint joinPoint) throws IOException {
         try {
             return joinPoint.proceed();
         } catch (WebSocketException we) {
-            return we.getMessage();
+            ErrorMassageResponse response = new ErrorMassageResponse(we.getMessage());
+            return jsonUtil.toJson(response);
         } catch (Throwable e) {
-            return e.getMessage();
+            ErrorMassageResponse response = new ErrorMassageResponse(e.getMessage());
+            return jsonUtil.toJson(response);
         }
     }
 }

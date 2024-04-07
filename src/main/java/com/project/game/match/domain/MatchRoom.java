@@ -166,12 +166,20 @@ public class MatchRoom extends BaseEntity {
         SkillEffect effect) {
         int effectValue = makeEffectValue(casterStat, effect);
 
-        casterStat.minusMp(effect.getManaCost());
-
         if (effect.getSkillEffectType() == DAMAGE) {
             targetStat.minusHp(effectValue);
         } else if (effect.getSkillEffectType() == HEAL) {
             casterStat.plusHpWithLimit(casterStartHp, effectValue);
+        }
+    }
+
+    public void payManaCost(PlayerType playerType, Integer manaCost) {
+        if (playerType.equals(HOST)) {
+            hostStat.minusMp(manaCost);
+        } else if (playerType.equals(ENTRANT)) {
+            entrantStat.minusMp(manaCost);
+        } else {
+            throw new PlayerTypeInvalidException();
         }
     }
 

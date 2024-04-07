@@ -14,8 +14,12 @@ public class PlayTurnResponse {
     private String useSkillNm;
     private String message;
 
-    public PlayTurnResponse(Boolean isGameOver) {
+    public PlayTurnResponse(Boolean isGameOver, Stat hostStat, Stat entrantStat,
+        String useSkillNm) {
         this.isGameOver = isGameOver;
+        this.hostStat = hostStat;
+        this.entrantStat = entrantStat;
+        this.useSkillNm = useSkillNm;
         this.message = "게임이 종료되었습니다.";
     }
 
@@ -26,6 +30,6 @@ public class PlayTurnResponse {
         this.entrantStat = entrantStat;
         this.turnOwner = turnOwner;
         this.useSkillNm = useSkillNm;
-        this.message = useSkillNm+"발동!\n"+turnOwner.toString()+" 턴!";
+        this.message = useSkillNm + "발동!\n" + turnOwner.toString() + " 턴!";
     }
 }

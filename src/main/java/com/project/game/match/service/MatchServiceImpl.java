@@ -258,6 +258,8 @@ public class MatchServiceImpl implements MatchService {
         List<SkillEffect> skillEffects = skillEffectRepository.findBySkillSkillId(
             skill.getSkillId());
 
+        matchRoom.payManaCost(playerType, skill.getManaCost());
+
         for (SkillEffect effect : skillEffects) {
             if (playerType == ENTRANT) {
                 matchRoom.effectSkillCastByEntrant(effect);
@@ -269,7 +271,8 @@ public class MatchServiceImpl implements MatchService {
         //만약 둘 중 한 플레이어의 체력이 0또는 0 이하가 될 경우 게임 종료 상태 반환
         if (matchRoom.isGameOverWithStat()) {
             matchRoom.setMatchStatus(FINISHED);
-            return new PlayTurnResponse(true);
+            return new PlayTurnResponse(true, matchRoom.getHostStat(), matchRoom.getEntrantStat(),
+                skill.getSkillNm());
         } else {
             PlayerType toggleTurnOwner = matchRoom.getToggleTurnOwner();
             matchRoom.setTurnOwner(toggleTurnOwner);

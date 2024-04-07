@@ -9,16 +9,11 @@ import lombok.Getter;
 public class SkillEffectGetListResponse {
 
     private SkillEffectType skillEffectType;
-
-    private Integer manaCost;
-
     private Integer fixedValue;
-
     private StatRate statRate;
 
     public SkillEffectGetListResponse(SkillEffect skillEffect) {
         this.skillEffectType = skillEffect.getSkillEffectType();
-        this.manaCost = skillEffect.getManaCost();
         this.fixedValue = skillEffect.getFixedValue();
         this.statRate = skillEffect.getStatRate();
     }

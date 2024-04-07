@@ -11,7 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 
-// TODO Thread 정보로 session을 식별 Thread Local ? Thread ID마다 Connection ID를 담아둬서 Connection ID를 활용하자.
+// TODO Thread 정보로 session을 식별하는 Thread Local를 통해서 Thread ID마다 Connection ID를 담아둬서 Connection ID를 활용하자.
 @Component
 public class WebSocketSessionManager {
 

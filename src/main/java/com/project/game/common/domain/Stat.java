@@ -2,7 +2,7 @@ package com.project.game.common.domain;
 
 import static com.project.game.common.util.BigDecimalUtil.multiplyAndRound;
 
-import com.project.game.common.exception.ValueInvalidException;
+import com.project.game.match.exception.NotEnoughManaException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
@@ -24,32 +24,34 @@ public class Stat {
     @Column(nullable = false)
     private Integer spd;
 
-    public static Stat getMultipliedStat(Stat stat, BigDecimal factor){
-        return new Stat(multiplyAndRound(stat.getHp(), factor), multiplyAndRound(stat.getAtk(),factor), multiplyAndRound(stat.getMp(),factor), multiplyAndRound(stat.getSpd(),factor));
+    public static Stat getMultipliedStat(Stat stat, BigDecimal factor) {
+        return new Stat(multiplyAndRound(stat.getHp(), factor),
+            multiplyAndRound(stat.getAtk(), factor), multiplyAndRound(stat.getMp(), factor),
+            multiplyAndRound(stat.getSpd(), factor));
     }
 
-    public void plusStat(Stat stat){
+    public void plusStat(Stat stat) {
         this.hp += stat.getHp();
         this.atk += stat.getAtk();
         this.mp += stat.getMp();
         this.spd += stat.getSpd();
     }
 
-    public void minusHp(Integer value){
+    public void minusHp(Integer value) {
         this.hp -= value;
     }
 
-    public void plusHpWithLimit(Integer limit, Integer value){
-        if(this.hp + value > limit){
+    public void plusHpWithLimit(Integer limit, Integer value) {
+        if (this.hp + value > limit) {
             this.hp = limit;
-        }else{
+        } else {
             this.hp += value;
         }
     }
 
-    public void minusMp(Integer value){
-        if(this.mp < value){
-            throw new ValueInvalidException();
+    public void minusMp(Integer value) {
+        if (this.mp < value) {
+            throw new NotEnoughManaException();
         }
         this.mp -= value;
     }

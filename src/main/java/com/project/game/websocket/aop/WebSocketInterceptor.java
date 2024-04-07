@@ -1,4 +1,4 @@
-package com.project.game.common.interceptor;
+package com.project.game.websocket.aop;
 
 import static com.project.game.common.util.JwtUtil.isExpired;
 

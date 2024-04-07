@@ -1,6 +1,6 @@
-package com.project.game.common.config;
+package com.project.game.websocket.config;
 
-import com.project.game.common.interceptor.WebSocketInterceptor;
+import com.project.game.websocket.aop.WebSocketInterceptor;
 import com.project.game.websocket.handler.WebSocketMessageHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

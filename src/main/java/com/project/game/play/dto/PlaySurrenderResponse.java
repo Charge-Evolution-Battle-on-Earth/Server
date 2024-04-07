@@ -2,12 +2,14 @@ package com.project.game.play.dto;
 
 import com.project.game.character.domain.Character;
 import com.project.game.match.domain.MatchRoom;
+import com.project.game.match.vo.MatchStatus;
 import com.project.game.match.vo.PlayerType;
 import lombok.Getter;
 
 @Getter
 public class PlaySurrenderResponse {
 
+    private MatchStatus matchStatus;
     private PlayerType winnerType;
     private PlayerType loserType;
     private Integer winnerGold;
@@ -18,8 +20,10 @@ public class PlaySurrenderResponse {
     private Integer loserTotalExp;
     private String message;
 
-    public PlaySurrenderResponse(PlayerType winnerType, PlayerType loserType, Character winner,
+    public PlaySurrenderResponse(PlayerType winnerType,
+        PlayerType loserType, Character winner,
         Character loser, MatchRoom matchRoom) {
+        this.matchStatus = matchRoom.getMatchStatus();
         this.winnerType = winnerType;
         this.loserType = loserType;
         this.winnerGold = matchRoom.getWinnerGold(winner.getLevelId());

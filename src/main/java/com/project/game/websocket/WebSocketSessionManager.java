@@ -15,7 +15,6 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class WebSocketSessionManager {
 
-    // TODO Thread Safe 한 객체로 변경해야함, 메모리 해제(try-with-resources) 관련 이슈 확인하기
     private Map<Long, WebSocketSession> webSocketSessionMap = new ConcurrentHashMap<>();
 
     public void addWebSocketSessionMap(Long key, WebSocketSession socketSession) {

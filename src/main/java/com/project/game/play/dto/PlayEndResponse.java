@@ -2,12 +2,14 @@ package com.project.game.play.dto;
 
 import com.project.game.character.domain.Character;
 import com.project.game.match.domain.MatchRoom;
+import com.project.game.match.vo.MatchStatus;
 import com.project.game.match.vo.PlayerType;
 import lombok.Getter;
 
 @Getter
 public class PlayEndResponse {
 
+    MatchStatus matchStatus;
     private PlayerType winnerType;
     private PlayerType loserType;
     private Integer winnerGold;
@@ -18,7 +20,10 @@ public class PlayEndResponse {
     private Integer loserTotalExp;
     private String message;
 
-    public PlayEndResponse(PlayerType winnerType, PlayerType loserType, Character winner, Character loser, MatchRoom matchRoom) {
+    public PlayEndResponse(PlayerType winnerType, PlayerType loserType,
+        Character winner,
+        Character loser, MatchRoom matchRoom) {
+        this.matchStatus = matchRoom.getMatchStatus();
         this.winnerType = winnerType;
         this.loserType = loserType;
         this.winnerGold = matchRoom.getWinnerGold(winner.getLevelId());
@@ -27,6 +32,6 @@ public class PlayEndResponse {
         this.loserTotalGold = loser.getMoney();
         this.winnerTotalExp = winner.getExp();
         this.loserTotalExp = loser.getExp();
-        this.message = winner.getUser().getNickname()+" 승리!\n"+"게임이 종료되었습니다.";
+        this.message = winner.getUser().getNickname() + " 승리!\n" + "게임이 종료되었습니다.";
     }
 }

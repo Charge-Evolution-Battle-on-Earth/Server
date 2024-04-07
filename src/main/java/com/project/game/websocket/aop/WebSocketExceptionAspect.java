@@ -28,7 +28,6 @@ public class WebSocketExceptionAspect {
             webSocketSessionManager.sendMessage(we.getMessage(), we.getPlayerIds());
             return null;
         } catch (Throwable e) {
-            // TODO 트랜잭션 롤백이 되는지 확인해야함
             return null;
         }
     }

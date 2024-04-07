@@ -25,10 +25,9 @@ public class WebSocketExceptionAspect {
         try {
             return joinPoint.proceed();
         } catch (WebSocketException we) {
-            webSocketSessionManager.sendMessage(we.getMessage(), we.getPlayerIds());
-            return null;
+            return we.getMessage();
         } catch (Throwable e) {
-            return null;
+            return e.getMessage();
         }
     }
 }

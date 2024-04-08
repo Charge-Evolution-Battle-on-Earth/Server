@@ -1,14 +1,12 @@
 package com.project.game.websocket.exception;
 
-import java.util.List;
-
 public class CharacterNotInMatchException extends WebSocketException {
 
-    public CharacterNotInMatchException(List<Long> playerIds) {
-        super("Your Character is not in Match", playerIds);
+    public CharacterNotInMatchException() {
+        super("Your Character is not in Match");
     }
 
-    public CharacterNotInMatchException(Long matchId, List<Long> playerIds) {
-        super("Your Character is not in Match [matchId]: " + matchId, playerIds);
+    public CharacterNotInMatchException(Long matchId) {
+        super("Your Character is not in Match [matchId]: " + matchId);
     }
 }

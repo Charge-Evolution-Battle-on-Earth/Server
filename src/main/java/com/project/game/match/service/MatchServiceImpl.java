@@ -43,13 +43,12 @@ import com.project.game.play.dto.PlayStartResponse;
 import com.project.game.play.dto.PlaySurrenderResponse;
 import com.project.game.play.dto.PlayTurnRequest;
 import com.project.game.play.dto.PlayTurnResponse;
-import com.project.game.websocket.exception.MatchStatusInvalidException;
 import com.project.game.skill.domain.Skill;
 import com.project.game.skill.domain.SkillEffect;
 import com.project.game.skill.dto.SkillNotFoundException;
 import com.project.game.skill.repository.SkillEffectRepository;
 import com.project.game.skill.repository.SkillRepository;
-import java.util.Collections;
+import com.project.game.websocket.exception.MatchStatusInvalidException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -194,8 +193,7 @@ public class MatchServiceImpl implements MatchService {
 
         //READY 이외의 상태일 경우 예외 처리
         if (!matchRoom.getMatchStatus().equals(READY)) {
-            throw new MatchStatusInvalidException(
-                matchId, Collections.singletonList(characterId));
+            throw new MatchStatusInvalidException(matchId);
         }
 
         Character host = matchRoom.getHost();
@@ -245,7 +243,7 @@ public class MatchServiceImpl implements MatchService {
 
         //IN_PROGRESS 이외의 상태일 경우 예외 처리
         if (!matchRoom.getMatchStatus().equals(IN_PROGRESS)) {
-            throw new MatchStatusInvalidException(matchId, Collections.singletonList(characterId));
+            throw new MatchStatusInvalidException(matchId);
         }
 
         //skill 보유 여부 검증
@@ -291,7 +289,7 @@ public class MatchServiceImpl implements MatchService {
 
         //종료된 매치인지 확인
         if (matchRoom.getMatchStatus() != FINISHED) {
-            throw new MatchStatusInvalidException(matchId, Collections.singletonList(characterId));
+            throw new MatchStatusInvalidException(matchId);
         }
 
         //host 사용자의 요청만 허용
@@ -321,7 +319,7 @@ public class MatchServiceImpl implements MatchService {
 
         //진행 중인 매치인지 확인
         if (matchRoom.getMatchStatus() != IN_PROGRESS) {
-            throw new MatchStatusInvalidException(matchId, Collections.singletonList(characterId));
+            throw new MatchStatusInvalidException(matchId);
         }
 
         //winner & loser 확인
@@ -356,7 +354,7 @@ public class MatchServiceImpl implements MatchService {
 
         //대기 중인 매치인지 확인
         if (matchRoom.getMatchStatus() != WAITING) {
-            throw new MatchStatusInvalidException(matchId, Collections.singletonList(characterId));
+            throw new MatchStatusInvalidException(matchId);
         }
 
         if (playerType == ENTRANT) {

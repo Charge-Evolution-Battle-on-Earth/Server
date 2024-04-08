@@ -1,6 +1,5 @@
 package com.project.game.websocket.exception;
 
-import java.util.List;
 import lombok.Getter;
 
 /**
@@ -9,16 +8,12 @@ import lombok.Getter;
 @Getter
 public class WebSocketException extends RuntimeException {
 
-    private List<Long> playerIds;
-
-    public WebSocketException(List<Long> playerIds) {
+    public WebSocketException() {
         super("WebSocket Exception Occurred");
-        this.playerIds = playerIds;
     }
 
-    public WebSocketException(String message, List<Long> playerIds) {
+    public WebSocketException(String message) {
         super(message);
-        this.playerIds = playerIds;
     }
 
 

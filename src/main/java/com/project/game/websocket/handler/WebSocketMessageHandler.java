@@ -58,7 +58,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
             List<Long> matchPlayersList = matchPlayers.toList();
 
             if (!matchPlayers.isContainsPlayer(characterId)) {
-                throw new CharacterNotInMatchException(matchId, matchPlayersList);
+                throw new CharacterNotInMatchException(matchId);
             }
 
             WebSocketCommand webSocketCommand = findByCommand(command);
@@ -103,8 +103,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
             case QUIT_GAME -> {
                 responseMessage = playController.quitGame(characterId, matchId);
             }
-            case EMPTY -> throw new InvalidWebSocketMessageException(matchId,
-                Collections.singletonList(characterId));
+            case EMPTY -> throw new InvalidWebSocketMessageException(matchId);
         }
         webSocketSessionManager.sendMessage(responseMessage, matchPlayers);
     }

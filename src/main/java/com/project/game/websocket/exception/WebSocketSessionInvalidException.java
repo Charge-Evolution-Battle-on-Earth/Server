@@ -1,15 +1,13 @@
 package com.project.game.websocket.exception;
 
-import java.util.List;
-
 public class WebSocketSessionInvalidException extends WebSocketException {
 
-    public WebSocketSessionInvalidException(List<Long> playerIds) {
-        super("WebSocketSession Invalid", playerIds);
+    public WebSocketSessionInvalidException() {
+        super("WebSocketSession Invalid");
     }
 
-    public WebSocketSessionInvalidException(Long matchId, List<Long> playerIds) {
-        super("WebSocketSession Invalid [matchId]: " + matchId, playerIds);
+    public WebSocketSessionInvalidException(Long matchId) {
+        super("WebSocketSession Invalid [matchId]: " + matchId);
     }
 
 }

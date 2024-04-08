@@ -2,7 +2,6 @@ package com.project.game.websocket;
 
 import com.project.game.websocket.exception.WebSocketSessionInvalidException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +18,7 @@ public class WebSocketSessionManager {
 
     public void addWebSocketSessionMap(Long key, WebSocketSession socketSession) {
         if (!validateSession(socketSession)) {
-            throw new WebSocketSessionInvalidException(Collections.singletonList(key));
+            throw new WebSocketSessionInvalidException();
         }
         this.webSocketSessionMap.put(key, socketSession);
     }

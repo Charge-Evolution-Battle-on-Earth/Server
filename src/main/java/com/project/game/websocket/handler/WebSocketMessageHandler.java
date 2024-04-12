@@ -1,10 +1,7 @@
 package com.project.game.websocket.handler;
 
 import static com.project.game.common.util.WebSocketSessionUtil.extractCharacterId;
-import static com.project.game.websocket.constant.WebSocketCommand.findByCommand;
-import static com.project.game.websocket.constant.WebSocketMessageProtocol.COMMAND;
-import static com.project.game.websocket.constant.WebSocketMessageProtocol.MATCH_ID;
-import static com.project.game.websocket.constant.WebSocketMessageProtocol.REQUEST;
+import static com.project.game.websocket.constant.WebSocketCommand.findWebSocketCommand;
 
 import com.google.gson.JsonObject;
 import com.project.game.common.util.JsonUtil;
@@ -13,8 +10,9 @@ import com.project.game.match.vo.MatchPlayer;
 import com.project.game.play.controller.PlayController;
 import com.project.game.play.dto.PlayReadyRequest;
 import com.project.game.play.dto.PlayTurnRequest;
-import com.project.game.websocket.constant.WebSocketCommand;
 import com.project.game.websocket.WebSocketSessionManager;
+import com.project.game.websocket.constant.WebSocketCommand;
+import com.project.game.websocket.dto.WebSocketMessageRequest;
 import com.project.game.websocket.exception.CharacterNotInMatchException;
 import com.project.game.websocket.exception.InvalidWebSocketMessageException;
 import java.io.IOException;
@@ -49,10 +47,12 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
         Long characterId = null;
         try {
             characterId = extractCharacterId(session, Long.class);
-            JsonObject jsonObject = jsonUtil.fromJson(message.getPayload(), JsonObject.class);
-            Long matchId = jsonUtil.extractProperty(jsonObject, MATCH_ID, Long.class);
-            JsonObject request = jsonUtil.extractProperty(jsonObject, REQUEST, JsonObject.class);
-            String command = jsonUtil.extractProperty(jsonObject, COMMAND, String.class);
+            WebSocketMessageRequest messageRequest = jsonUtil.parseWebSocketMessage(
+                message.getPayload());
+            Long matchId = messageRequest.matchId();
+            JsonObject request = messageRequest.request();
+            String command = messageRequest.command();
+
             MatchPlayer matchPlayers = matchService.findPlayerByMatchId(matchId);
             List<Long> matchPlayersList = matchPlayers.toList();
 
@@ -60,7 +60,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
                 throw new CharacterNotInMatchException(matchId);
             }
 
-            WebSocketCommand webSocketCommand = findByCommand(command);
+            WebSocketCommand webSocketCommand = findWebSocketCommand(command);
 
             dispatcher(characterId, matchId, request, matchPlayersList, webSocketCommand);
         } catch (Exception e) {

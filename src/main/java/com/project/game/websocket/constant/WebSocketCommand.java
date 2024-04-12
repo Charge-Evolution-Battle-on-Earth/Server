@@ -18,7 +18,7 @@ public enum WebSocketCommand {
         this.command = command;
     }
 
-    public static WebSocketCommand findByCommand(String command) {
+    public static WebSocketCommand findWebSocketCommand(String command) {
         return Arrays.stream(WebSocketCommand.values())
             .filter(webSocketCommand -> command.equals(webSocketCommand.command))
             .findAny()

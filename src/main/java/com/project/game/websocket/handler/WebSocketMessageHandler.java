@@ -49,7 +49,6 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
         Long characterId = null;
         try {
             characterId = extractCharacterId(session, Long.class);
-            // TODO JSON 파싱 시 Protocol 전체를 한번에 파싱하는 클래스 or 메서드를 만들자?
             JsonObject jsonObject = jsonUtil.fromJson(message.getPayload(), JsonObject.class);
             Long matchId = jsonUtil.extractProperty(jsonObject, MATCH_ID, Long.class);
             JsonObject request = jsonUtil.extractProperty(jsonObject, REQUEST, JsonObject.class);
@@ -117,6 +116,11 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         // TODO 강제 종료에 대한 처리 필요 (ex match room 관리, match 결과에 대한 처리, reconnection 시 어떻게 처리할 것인지 등)
-        webSocketSessionManager.removeWebSocketSessionMap(extractCharacterId(session, Long.class));
+        try (session) {
+            webSocketSessionManager.removeWebSocketSessionMap(
+                extractCharacterId(session, Long.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

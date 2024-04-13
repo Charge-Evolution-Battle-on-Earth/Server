@@ -333,8 +333,8 @@ public class MatchServiceImpl implements MatchService {
         Character winner;
         Character loser;
 
-        PlayerType winnerType = playerType;
-        PlayerType loserType = togglePlayerType(winnerType);
+        PlayerType winnerType = togglePlayerType(playerType);
+        PlayerType loserType = playerType;
 
         if (winnerType == HOST) {
             winner = matchRoom.getHost();

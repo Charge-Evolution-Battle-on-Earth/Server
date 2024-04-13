@@ -170,13 +170,19 @@ public class ItemServiceImpl implements ItemService {
         Long itemTypeId = itemSellRequest.getItemTypeId();
         Character character = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
+        CharacterItem characterItem = characterItemRepository.findById(
+                itemSellRequest.getCharacterItemId())
+            .orElseThrow(() -> new CharacterItemNotFoundException(
+                itemSellRequest.getCharacterItemId()));
         ItemType itemType = itemTypeRepository.findById(itemTypeId)
             .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
-        CharacterItemEquip equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
-            characterId, itemTypeId).orElseThrow(() -> new CharacterItemNotFoundException());
+        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId);
 
-        CharacterItem characterItem = validateAndUnequipItem(itemSellRequest.getCharacterItemId(),
-            itemType, equippedItem);
+        if (equippedItem.isPresent()) {
+            validateAndUnequipItem(itemSellRequest.getCharacterItemId(), itemType,
+                equippedItem.get());
+        }
         //장비 판매
         character.plusMoney(characterItem.getItem().getCost());
         characterItemRepository.delete(characterItem);

@@ -45,7 +45,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemGetResponse getItem(Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(()->new ItemNotFoundException(itemId));
+        Item item = itemRepository.findById(itemId)
+            .orElseThrow(() -> new ItemNotFoundException(itemId));
 
         ItemGetResponse responseDTO = new ItemGetResponse(item);
         return responseDTO;
@@ -53,7 +54,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemGetResponse> getItemOnShop(Long itemTypeId, Long levelId, Long jobId) {
-        List<Item> items = itemRepository.findByItemTypeItemTypeIdAndLevelIdLessThanEqualAndJobJobId(itemTypeId, levelId, jobId);
+        List<Item> items = itemRepository.findByItemTypeItemTypeIdAndLevelIdLessThanEqualAndJobJobId(
+            itemTypeId, levelId, jobId);
         List<ItemGetResponse> itemResponseList = items.stream().map(
             item -> new ItemGetResponse(item)
         ).collect(Collectors.toList());
@@ -63,16 +65,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemBuyResponse buyItemOnShop(Long characterId, ItemBuyRequest itemBuyRequest) {
-        Item item = itemRepository.findById(itemBuyRequest.getItemId()).orElseThrow(()->new ItemNotFoundException(itemBuyRequest.getItemId()));
-        Character character = characterRepository.findById(characterId).orElseThrow(()->new CharacterNotFoundException(characterId));
+        Item item = itemRepository.findById(itemBuyRequest.getItemId())
+            .orElseThrow(() -> new ItemNotFoundException(itemBuyRequest.getItemId()));
+        Character character = characterRepository.findById(characterId)
+            .orElseThrow(() -> new CharacterNotFoundException(characterId));
 
         //구매 할 아이템 레벨 검증
-        if(item.getLevelId() > character.getLevelId()){
+        if (item.getLevelId() > character.getLevelId()) {
             throw new LevelInvalidException(character.getLevelId());
         }
 
         //구매 할 아이템 직업 검증
-        if(item.getJob().getJobId() != character.getJob().getJobId()){
+        if (item.getJob().getJobId() != character.getJob().getJobId()) {
             throw new JobInvalidException(character.getJob().getJobId());
         }
 
@@ -84,7 +88,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemInvenGetResponse> getCharacterInventory(Long characterId, Long itemTypeId) {
-        List<CharacterItem> characterItems = characterItemRepository.getInventoryList(itemTypeId);
+        List<CharacterItem> characterItems = characterItemRepository.getInventoryList(characterId,
+            itemTypeId);
 
         List<ItemInvenGetResponse> itemInvenGetResponses = characterItems.stream().map(
             characterItem -> new ItemInvenGetResponse(characterItem)
@@ -95,10 +100,12 @@ public class ItemServiceImpl implements ItemService {
     private CharacterItem validateAndUnequipItem(Long characterItemId, ItemType itemType,
         Optional<CharacterItemEquip> equippedItem) {
         //장착 할 장비의 보유 여부 확인
-        CharacterItem characterItem = characterItemRepository.findById(characterItemId).orElseThrow(()->new CharacterItemNotFoundException(characterItemId));
+        CharacterItem characterItem = characterItemRepository.findById(characterItemId)
+            .orElseThrow(() -> new CharacterItemNotFoundException(characterItemId));
 
         //아이템 타입 검증
-        if (!itemType.getItemTypeId().equals(characterItem.getItem().getItemType().getItemTypeId())) {
+        if (!itemType.getItemTypeId()
+            .equals(characterItem.getItem().getItemType().getItemTypeId())) {
             throw new ItemTypeInvalidException(characterItem.getItem().getItemId());
         }
 
@@ -113,9 +120,12 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemEquipResponse equipItem(Long characterId, ItemEquipRequest itemEquipRequest) {
         Long itemTypeId = itemEquipRequest.getItemTypeId();
-        Character character = characterRepository.findById(characterId).orElseThrow(()->new CharacterNotFoundException(characterId));
-        ItemType itemType = itemTypeRepository.findById(itemTypeId).orElseThrow(()->new ItemTypeNotFoundException(itemTypeId));
-        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(characterId,itemTypeId);
+        Character character = characterRepository.findById(characterId)
+            .orElseThrow(() -> new CharacterNotFoundException(characterId));
+        ItemType itemType = itemTypeRepository.findById(itemTypeId)
+            .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
+        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId);
 
         CharacterItem characterItem = validateAndUnequipItem(
             itemEquipRequest.getCharacterItemId(), itemType, equippedItem);
@@ -131,8 +141,10 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void unequipItem(Long characterId, ItemUnEquipRequest itemUnEquipRequest) {
         Long itemTypeId = itemUnEquipRequest.getItemTypeId();
-        ItemType itemType = itemTypeRepository.findById(itemTypeId).orElseThrow(()->new ItemTypeNotFoundException(itemTypeId));
-        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(characterId,itemTypeId);
+        ItemType itemType = itemTypeRepository.findById(itemTypeId)
+            .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
+        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId);
 
         validateAndUnequipItem(itemUnEquipRequest.getCharacterItemId(), itemType, equippedItem);
     }
@@ -141,11 +153,15 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemSellResponse sellItem(Long characterId, ItemSellRequest itemSellRequest) {
         Long itemTypeId = itemSellRequest.getItemTypeId();
-        Character character = characterRepository.findById(characterId).orElseThrow(()->new CharacterNotFoundException(characterId));
-        ItemType itemType = itemTypeRepository.findById(itemTypeId).orElseThrow(()->new ItemTypeNotFoundException(itemTypeId));
-        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(characterId,itemTypeId);
+        Character character = characterRepository.findById(characterId)
+            .orElseThrow(() -> new CharacterNotFoundException(characterId));
+        ItemType itemType = itemTypeRepository.findById(itemTypeId)
+            .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
+        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId);
 
-        CharacterItem characterItem = validateAndUnequipItem(itemSellRequest.getCharacterItemId(), itemType, equippedItem);
+        CharacterItem characterItem = validateAndUnequipItem(itemSellRequest.getCharacterItemId(),
+            itemType, equippedItem);
         //장비 판매
         character.plusMoney(characterItem.getItem().getCost());
         characterItemRepository.delete(characterItem);

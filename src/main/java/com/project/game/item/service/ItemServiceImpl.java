@@ -22,6 +22,7 @@ import com.project.game.item.dto.ItemUnEquipRequest;
 import com.project.game.item.exception.ItemNotFoundException;
 import com.project.game.item.exception.ItemTypeInvalidException;
 import com.project.game.item.exception.ItemTypeNotFoundException;
+import com.project.game.item.exception.ItemUnEquippedException;
 import com.project.game.item.repository.ItemRepository;
 import com.project.game.item.repository.ItemTypeRepository;
 import com.project.game.job.exception.JobInvalidException;
@@ -97,8 +98,10 @@ public class ItemServiceImpl implements ItemService {
         return itemInvenGetResponses;
     }
 
+
+    // rollback 처리를 위해 반드시 private 제한자 사용해야함
     private CharacterItem validateAndUnequipItem(Long characterItemId, ItemType itemType,
-        Optional<CharacterItemEquip> equippedItem) {
+        CharacterItemEquip equippedItem) {
         //장착 할 장비의 보유 여부 확인
         CharacterItem characterItem = characterItemRepository.findById(characterItemId)
             .orElseThrow(() -> new CharacterItemNotFoundException(characterItemId));
@@ -110,9 +113,8 @@ public class ItemServiceImpl implements ItemService {
         }
 
         //장착 중이던 장비 해제
-        if (equippedItem.isPresent()) {
-            characterItemEquipRepository.delete(equippedItem.get());
-        }
+        characterItemEquipRepository.delete(equippedItem);
+
         return characterItem;
     }
 
@@ -122,13 +124,21 @@ public class ItemServiceImpl implements ItemService {
         Long itemTypeId = itemEquipRequest.getItemTypeId();
         Character character = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
+        CharacterItem characterItem = characterItemRepository.findById(
+                itemEquipRequest.getCharacterItemId())
+            .orElseThrow(() -> new CharacterItemNotFoundException(
+                itemEquipRequest.getCharacterItemId()));
         ItemType itemType = itemTypeRepository.findById(itemTypeId)
             .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
         Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
             characterId, itemTypeId);
 
-        CharacterItem characterItem = validateAndUnequipItem(
-            itemEquipRequest.getCharacterItemId(), itemType, equippedItem);
+        if (equippedItem.isPresent()) {
+            validateAndUnequipItem(itemEquipRequest.getCharacterItemId(), itemType,
+                equippedItem.get());
+        }
+
+        characterItemEquipRepository.flush();
 
         //장비 착용
         CharacterItemEquip recentEquippedItem = characterItemEquipRepository.save(
@@ -143,8 +153,13 @@ public class ItemServiceImpl implements ItemService {
         Long itemTypeId = itemUnEquipRequest.getItemTypeId();
         ItemType itemType = itemTypeRepository.findById(itemTypeId)
             .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
-        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
-            characterId, itemTypeId);
+        CharacterItemEquip equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId).orElseThrow(() -> new CharacterItemNotFoundException());
+
+        if (!itemUnEquipRequest.getCharacterItemId()
+            .equals(equippedItem.getCharacterItem().getCharacterItemId())) {
+            throw new ItemUnEquippedException(itemUnEquipRequest.getCharacterItemId());
+        }
 
         validateAndUnequipItem(itemUnEquipRequest.getCharacterItemId(), itemType, equippedItem);
     }
@@ -157,8 +172,8 @@ public class ItemServiceImpl implements ItemService {
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
         ItemType itemType = itemTypeRepository.findById(itemTypeId)
             .orElseThrow(() -> new ItemTypeNotFoundException(itemTypeId));
-        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
-            characterId, itemTypeId);
+        CharacterItemEquip equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId).orElseThrow(() -> new CharacterItemNotFoundException());
 
         CharacterItem characterItem = validateAndUnequipItem(itemSellRequest.getCharacterItemId(),
             itemType, equippedItem);

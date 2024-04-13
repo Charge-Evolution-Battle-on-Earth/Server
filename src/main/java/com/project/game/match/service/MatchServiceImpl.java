@@ -359,7 +359,7 @@ public class MatchServiceImpl implements MatchService {
         Character player = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
 
-        //대기 중인 매치인지 확인
+        //대기 중인 매치인지 확인`
         if (matchRoom.getMatchStatus() != WAITING) {
             throw new MatchStatusInvalidException(matchId);
         }

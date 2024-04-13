@@ -37,4 +37,8 @@ public class WebSocketSessionManager {
     public synchronized boolean validateSession(WebSocketSession socketSession) {
         return socketSession != null && socketSession.isOpen();
     }
+
+    public boolean isContainsKey(Long key) {
+        return webSocketSessionMap.containsKey(key);
+    }
 }

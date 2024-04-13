@@ -48,9 +48,9 @@ import com.project.game.skill.domain.SkillEffect;
 import com.project.game.skill.dto.SkillNotFoundException;
 import com.project.game.skill.repository.SkillEffectRepository;
 import com.project.game.skill.repository.SkillRepository;
+import com.project.game.websocket.WebSocketSessionManager;
 import com.project.game.websocket.exception.MatchStatusInvalidException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,6 +72,7 @@ public class MatchServiceImpl implements MatchService {
     private final SkillEffectRepository skillEffectRepository;
     private final MatchHistoryRepository matchHistoryRepository;
     private final LevelService levelService;
+    private final WebSocketSessionManager webSocketSessionManager;
 
     @Value("${game.win-exp}")
     private Integer winExp;
@@ -103,6 +104,12 @@ public class MatchServiceImpl implements MatchService {
     public MatchRoomUpsertResponse saveMatchRoom(Long characterId) {
         Character host = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
+
+        // 자신이 이미 방에 참여 중인 경우 방을 생성할 수없다.
+        if (webSocketSessionManager.isContainsKey(characterId)) {
+            throw new MatchRoomDuplicateParticipantException(characterId);
+        }
+
         MatchRoom matchRoom = matchRoomRepository.save(
             MatchRoom.builder().host(host).matchStatus(WAITING).stakedGold(makeStakedGold(
                 host.getLevelId())).build());
@@ -127,7 +134,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         //조건 2. 자신이 이미 방에 참여 중인 경우 참여자로 입장할 수없다.
-        if (Objects.equals(matchRoom.getHost().getCharacterId(), characterId)) {
+        if (webSocketSessionManager.isContainsKey(characterId)) {
             throw new MatchRoomDuplicateParticipantException(characterId);
         }
 
@@ -369,6 +376,9 @@ public class MatchServiceImpl implements MatchService {
                 matchRoom.setEntrant(null);
             }
         }
+
+        //웹소켓 세션 제거
+        webSocketSessionManager.removeWebSocketSessionMap(characterId);
 
         return new PlayQuitResponse(player, playerType);
     }

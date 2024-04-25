@@ -18,6 +18,17 @@
 
 <br>
 
+### 💻 개발 환경
+- Version : Java 17
+- IDE : IntelliJ
+- Framework : SpringBoot 3.1.5
+- ORM : JPA
+- Real Time Networking : WebSocket
+
+### 🧩 ERD
+![CEBONE_ERD](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/ed8d9154-db4b-4327-a609-4d2f8d0bda0f)
+
+
 ## 실시간 양방향 통신 시스템
 ### 📝 WebSocket 메세지 프로토콜
 
@@ -163,13 +174,3 @@ public class WebSocketExceptionAspect {
     }
 }
 ```
-
-### 💻 개발 환경
-Version : Java 17
-IDE : IntelliJ
-Framework : SpringBoot 3.1.5
-ORM : JPA
-Real Time Networking : WebSocket
-
-### 🧩 ERD
-![CEBONE_ERD](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/ed8d9154-db4b-4327-a609-4d2f8d0bda0f)

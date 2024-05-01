@@ -3,7 +3,6 @@
   <img src="https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/b7cd24b8-c900-4126-afb7-a5ee291ba881" alt="진화전투_로고">    
 </p>
 
-- 배포 URL:
 - 디자인: [Figma](https://www.figma.com/file/VOS1PohXqLBLN3Ouehbsmm/%EA%B2%8C%EC%9E%84?type=design&node-id=60%3A2&mode=design&t=2WHgNObeB5Et7cu7-1)
 - ERD: [ERD](https://dbdiagram.io/d/6501735a02bd1c4a5e7a76d2)
   

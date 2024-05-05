@@ -30,7 +30,8 @@
 ![CEBONE_ERD](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/ed8d9154-db4b-4327-a609-4d2f8d0bda0f)
 
 ### 인게임
-![image](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/54219026-6328-41a0-9e05-6de64750c50d)
+![image](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/cc986ede-f048-44e7-ae1d-884ccc69ea44)
+
 
 
 ## 실시간 양방향 통신 시스템

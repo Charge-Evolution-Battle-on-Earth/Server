@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemGetResponse> getItemOnShop(Long itemTypeId, Long levelId, Long jobId) {
-        List<Item> items = itemRepository.findByItemTypeItemTypeIdAndLevelIdLessThanEqualAndJobJobId(
+        List<Item> items = itemRepository.findItemByShop(
             itemTypeId, levelId, jobId);
         List<ItemGetResponse> itemResponseList = items.stream().map(
             item -> new ItemGetResponse(item)

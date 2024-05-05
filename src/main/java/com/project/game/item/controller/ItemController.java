@@ -35,26 +35,30 @@ public class ItemController {
     }
 
     /**
-     * 조건 별 아이템 리스트 조회
-     * @param itemTypeId 
+     * (상점) 조건 별 아이템 리스트 조회
+     *
+     * @param itemTypeId
      * @param levelId
      * @param jobId
      * @return
      */
     @GetMapping("/{itemTypeId}/{levelId}/{jobId}")
-    private ResponseEntity<List<ItemGetResponse>> findItemOnShop(@PathVariable Long itemTypeId,@PathVariable Long levelId, @PathVariable Long jobId) {
+    private ResponseEntity<List<ItemGetResponse>> findItemOnShop(@PathVariable Long itemTypeId,
+        @PathVariable Long levelId, @PathVariable Long jobId) {
         List<ItemGetResponse> response = itemService.getItemOnShop(itemTypeId, levelId, jobId);
         return ResponseEntity.ok(response);
     }
 
     /**
      * 아이템 구매
-     * @param authentication 
+     *
+     * @param authentication
      * @param itemBuyRequest
      * @return
      */
     @PostMapping("/buy")
-    private ResponseEntity<ItemBuyResponse> buyItemOnShop(Authentication authentication,  @RequestBody ItemBuyRequest itemBuyRequest) {
+    private ResponseEntity<ItemBuyResponse> buyItemOnShop(Authentication authentication,
+        @RequestBody ItemBuyRequest itemBuyRequest) {
         Long characterId = Long.valueOf(authentication.getName());
 
         ItemBuyResponse response = itemService.buyItemOnShop(characterId, itemBuyRequest);
@@ -63,26 +67,31 @@ public class ItemController {
 
     /**
      * 캐릭터 인벤토리 조회
+     *
      * @param authentication
      * @param itemTypeId
      * @return
      */
     @GetMapping("/inven/{itemTypeId}")
-    private ResponseEntity<List<ItemInvenGetResponse>> getCharacterInventory(Authentication authentication, @PathVariable Long itemTypeId) {
+    private ResponseEntity<List<ItemInvenGetResponse>> getCharacterInventory(
+        Authentication authentication, @PathVariable Long itemTypeId) {
         Long characterId = Long.valueOf(authentication.getName());
 
-        List<ItemInvenGetResponse> response = itemService.getCharacterInventory(characterId, itemTypeId);
+        List<ItemInvenGetResponse> response = itemService.getCharacterInventory(characterId,
+            itemTypeId);
         return ResponseEntity.ok(response);
     }
 
     /**
      * 아이템 장착
-     * @param authentication 
+     *
+     * @param authentication
      * @param itemEquipRequest
      * @return
      */
     @PostMapping("/equip")
-    private ResponseEntity<ItemEquipResponse> equipItem(Authentication authentication, @RequestBody ItemEquipRequest itemEquipRequest) {
+    private ResponseEntity<ItemEquipResponse> equipItem(Authentication authentication,
+        @RequestBody ItemEquipRequest itemEquipRequest) {
         Long characterId = Long.valueOf(authentication.getName());
 
         ItemEquipResponse response = itemService.equipItem(characterId, itemEquipRequest);
@@ -91,12 +100,14 @@ public class ItemController {
 
     /**
      * 아이템 장착 해제
-     * @param authentication 
+     *
+     * @param authentication
      * @param itemUnEquipRequest
      * @return
      */
     @PostMapping("/unequip")
-    private ResponseEntity<Void> unequipItem(Authentication authentication, @RequestBody ItemUnEquipRequest itemUnEquipRequest) {
+    private ResponseEntity<Void> unequipItem(Authentication authentication,
+        @RequestBody ItemUnEquipRequest itemUnEquipRequest) {
         Long characterId = Long.valueOf(authentication.getName());
 
         itemService.unequipItem(characterId, itemUnEquipRequest);
@@ -105,12 +116,14 @@ public class ItemController {
 
     /**
      * 아이템 판매
-     * @param authentication 
+     *
+     * @param authentication
      * @param itemSellRequest
      * @return
      */
     @PostMapping("/sell")
-    private ResponseEntity<ItemSellResponse> sellItem(Authentication authentication, @RequestBody ItemSellRequest itemSellRequest) {
+    private ResponseEntity<ItemSellResponse> sellItem(Authentication authentication,
+        @RequestBody ItemSellRequest itemSellRequest) {
         Long characterId = Long.valueOf(authentication.getName());
 
         ItemSellResponse response = itemService.sellItem(characterId, itemSellRequest);

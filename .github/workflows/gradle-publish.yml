@@ -21,6 +21,12 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Set YML
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+          find src
+
       - name: Make Gradlew executable
         run: chmod +x ./gradlew
 
@@ -45,10 +51,6 @@ jobs:
           path: build/libs/
       
       - name: Deploy to EC2
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://charge-evolution-game-db.cjw4mimesl1n.ap-northeast-2.rds.amazonaws.com:5432/postgres
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           echo "${{ secrets.SERVER_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem

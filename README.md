@@ -29,8 +29,8 @@
 ### 🧩 ERD
 ![CEBONE_ERD](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/ed8d9154-db4b-4327-a609-4d2f8d0bda0f)
 
-### 인게임
-![image](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/cc986ede-f048-44e7-ae1d-884ccc69ea44)
+### 인게임 시연
+![CEBONE](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/d6f979fd-991d-4fa7-bf4b-fe8b2e755ae1)
 
 
 

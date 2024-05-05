@@ -2,8 +2,9 @@ name: Java CI with Gradle & Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -46,5 +47,5 @@ jobs:
         run: scp *.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:~/cicd
       - name: Execute remote commands
         run: |
-          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "sudo fuser -k 8080/tcp"
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "sudo fuser -k 80/tcp"
           ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "sudo nohup java -jar ~/cicd/*.jar &"

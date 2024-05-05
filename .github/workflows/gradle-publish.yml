@@ -39,28 +39,15 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: jar-files
-        path: /tmp
+        path: ${{ github.workspace }}/tmp # 다운로드 받을 디렉토리를 workspace 내 tmp 디렉토리로 변경합니다.
 
     - name: Copy JAR to server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: ${{ secrets.SERVER_PORT }}
-        source: "/tmp/game-0.0.1-SNAPSHOT.jar" # 빌드된 JAR 파일명에 맞게 수정
-        target: "/path/to/deployment/directory/"
+      run: scp -i ${{ secrets.SERVER_SSH_KEY }} -P ${{ secrets.SERVER_PORT }} /tmp/game-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/path/to/deployment/directory/
 
     - name: SSH into server and restart application
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: ${{ secrets.SERVER_PORT }}
-        script: |
+      run: |
+        ssh -i ${{ secrets.SERVER_SSH_KEY }} -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           cd /path/to/deployment/directory/
-          # 이전 프로세스 종료
-          pkill -f "java -jar game-0.0.1-SNAPSHOT.jar" # 빌드된 JAR 파일명에 맞게 수정
-          # 새로운 프로세스 실행
-          nohup java -jar game-0.0.1-SNAPSHOT.jar & # 빌드된 JAR 파일명에 맞게 수정
+          pkill -f "java -jar game-0.0.1-SNAPSHOT.jar"
+          nohup java -jar game-0.0.1-SNAPSHOT.jar &
+        EOF

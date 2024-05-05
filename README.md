@@ -29,12 +29,12 @@
 - Real Time Networking : WebSocket
 
 ## 주요 기능
-회원 가입 및 로그인
-로비 - 방 생성 및 입장
-상점 - 아이템 구매
-인벤토리 - 아이템 장착, 해제, 판매
-상태창 - 자신의 정보 확인, 경험치
-인게임 - 실시간 통신으로 게임 진행
+- 회원 가입 및 로그인
+- 로비 - 방 생성 및 입장
+- 상점 - 아이템 구매
+- 인벤토리 - 아이템 장착, 해제, 판매
+- 상태창 - 자신의 정보 확인, 경험치
+- 인게임 - 실시간 통신으로 게임 진행
 
 ## 🧩 ERD
 ![CEBONE_ERD](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/ed8d9154-db4b-4327-a609-4d2f8d0bda0f)

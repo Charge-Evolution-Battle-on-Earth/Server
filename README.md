@@ -4,7 +4,7 @@
 </p>
 
 
-[![GitHub Release](https://img.shields.io/github/v/release/Charge-Evolution-Battle-on-Earth/Client)](https://github.com/Charge-Evolution-Battle-on-Earth/Client/releases)
+- 다운로드: [![GitHub Release](https://img.shields.io/github/v/release/Charge-Evolution-Battle-on-Earth/Client)](https://github.com/Charge-Evolution-Battle-on-Earth/Client/releases)
 - 디자인: [Figma](https://www.figma.com/file/VOS1PohXqLBLN3Ouehbsmm/%EA%B2%8C%EC%9E%84?type=design&node-id=60%3A2&mode=design&t=2WHgNObeB5Et7cu7-1)
 - ERD: [ERD](https://dbdiagram.io/d/6501735a02bd1c4a5e7a76d2)
   

@@ -191,7 +191,7 @@ public class MatchServiceImpl implements MatchService {
     public PlayGreetingResponse greeting(Long characterId) {
         Character character = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
-        return new PlayGreetingResponse(character.getUser().getNickname() + "님이 입장하였습니다.");
+        return new PlayGreetingResponse("[" + character.getUser().getNickname() + "님이 입장하였습니다.]");
     }
 
     @Override

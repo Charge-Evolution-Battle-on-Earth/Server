@@ -3,6 +3,8 @@
   <img src="https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/b7cd24b8-c900-4126-afb7-a5ee291ba881" alt="진화전투_로고">    
 </p>
 
+
+- 다운로드: [![GitHub Release](https://img.shields.io/github/v/release/Charge-Evolution-Battle-on-Earth/Client)](https://github.com/Charge-Evolution-Battle-on-Earth/Client/releases)
 - 디자인: [Figma](https://www.figma.com/file/VOS1PohXqLBLN3Ouehbsmm/%EA%B2%8C%EC%9E%84?type=design&node-id=60%3A2&mode=design&t=2WHgNObeB5Et7cu7-1)
 - ERD: [ERD](https://dbdiagram.io/d/6501735a02bd1c4a5e7a76d2)
   
@@ -19,19 +21,26 @@
 
 <br>
 
-### 💻 개발 환경
+## 💻 개발 환경
 - Version : Java 17
 - IDE : IntelliJ
 - Framework : SpringBoot 3.1.5
 - ORM : JPA
 - Real Time Networking : WebSocket
 
-### 🧩 ERD
+## 주요 기능
+- 회원 가입 및 로그인
+- 로비 - 방 생성 및 입장
+- 상점 - 아이템 구매
+- 인벤토리 - 아이템 장착, 해제, 판매
+- 상태창 - 자신의 정보 확인, 경험치
+- 인게임 - 실시간 통신으로 게임 진행
+
+## 🧩 ERD
 ![CEBONE_ERD](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/ed8d9154-db4b-4327-a609-4d2f8d0bda0f)
 
-### 인게임
-![image](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/54219026-6328-41a0-9e05-6de64750c50d)
-
+## 인게임 시연
+![CEBONE](https://github.com/Charge-Evolution-Battle-on-Earth/Server/assets/31121731/d6f979fd-991d-4fa7-bf4b-fe8b2e755ae1)
 
 ## 실시간 양방향 통신 시스템
 ### 📝 WebSocket 메세지 프로토콜

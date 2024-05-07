@@ -1,16 +1,14 @@
 name: CD with Gradle &  Deploy
 
 on:
-  push:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+  pull_request:
+    types:
+      - closed
 
 jobs:
-  build:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2  
       - name: Set up JDK 17
@@ -39,7 +37,7 @@ jobs:
           path: build/libs/game-0.0.1-SNAPSHOT.jar
 
   deploy:
-    needs: build
+    needs: if_merged
     runs-on: ubuntu-latest    
     steps:
       - name: Download build artifacts

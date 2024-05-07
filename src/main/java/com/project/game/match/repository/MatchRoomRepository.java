@@ -19,6 +19,7 @@ public interface MatchRoomRepository extends JpaRepository<MatchRoom, Long> {
             + "ELSE 5 "
             + "END, "
             + "r.match_room_id ASC"
+        , countQuery = "SELECT COUNT(*) FROM match_room"
         , nativeQuery = true
     )
     Slice<MatchRoom> findAllByPaging(Pageable pageable);

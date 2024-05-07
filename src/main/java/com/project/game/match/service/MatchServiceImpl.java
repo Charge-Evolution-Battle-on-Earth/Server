@@ -187,7 +187,9 @@ public class MatchServiceImpl implements MatchService {
             matchRoom.getMatchStatus());
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public PlayGreetingResponse greeting(Long characterId) {
         Character character = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));

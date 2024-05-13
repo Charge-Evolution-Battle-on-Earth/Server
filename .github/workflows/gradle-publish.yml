@@ -51,5 +51,5 @@ jobs:
           echo "${{ secrets.SERVER_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
           scp -i private_key.pem -o StrictHostKeyChecking=no build/libs/game-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/game.jar
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "sudo pgrep java | xargs kill -9; sudo nohup java -jar /home/${{ secrets.SERVER_USERNAME }}/game.jar > app.log 2>&1 &"
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "sudo pkill -f "java -jar /home/${{ secrets.SERVER_USERNAME }}/game.jar"; sudo nohup java -jar /home/${{ secrets.SERVER_USERNAME }}/game.jar > app.log 2>&1 &"
           rm -f private_key.pem

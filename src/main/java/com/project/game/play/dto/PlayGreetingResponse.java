@@ -7,7 +7,13 @@ public class PlayGreetingResponse {
 
     String greetingMessage;
 
-    public PlayGreetingResponse(String greetingMessage) {
-        this.greetingMessage = greetingMessage;
+    Long jobId;
+
+    String jobNm;
+
+    public PlayGreetingResponse(String characterNickname, Long jobId, String jobNm) {
+        this.greetingMessage = "[" + characterNickname + "님이 입장하였습니다.]";
+        this.jobId = jobId;
+        this.jobNm = jobNm;
     }
 }

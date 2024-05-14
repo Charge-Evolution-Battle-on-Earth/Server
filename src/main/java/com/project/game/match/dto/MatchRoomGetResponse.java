@@ -21,10 +21,10 @@ public class MatchRoomGetResponse {
         this.entrantId =
             (matchRoom.getEntrant() != null) ? matchRoom.getEntrant().getCharacterId() : null;
         this.hostNickname =
-            (matchRoom.getHost() != null || matchRoom.getHost().getUser() != null)
+            (matchRoom.getHost() != null && matchRoom.getHost().getUser() != null)
                 ? matchRoom.getHost().getUser().getNickname() : null;
         this.entrantNickname =
-            (matchRoom.getEntrant() != null || matchRoom.getEntrant().getUser() != null)
+            (matchRoom.getEntrant() != null && matchRoom.getEntrant().getUser() != null)
                 ? matchRoom.getEntrant().getUser().getNickname() : null;
         this.matchStatus = matchRoom.getMatchStatus();
         this.stakeGold = matchRoom.getStakedGold();

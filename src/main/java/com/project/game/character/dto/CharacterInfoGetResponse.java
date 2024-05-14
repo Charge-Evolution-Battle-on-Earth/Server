@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class CharacterInfoGetResponse {
 
+    private Long characterId;
     private String nickname;
     private Stat stat;
     private Integer levelId;
@@ -24,6 +25,7 @@ public class CharacterInfoGetResponse {
     public CharacterInfoGetResponse(Character character, Stat stat, Integer totalExp) {
         Nation nation = character.getNation();
         Job job = character.getJob();
+        this.characterId = character.getCharacterId();
         this.nickname = character.getUser().getNickname();
         this.stat = stat;
         this.levelId = character.getLevelId();

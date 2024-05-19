@@ -21,8 +21,8 @@ public class PlayController {
     private final MatchService matchService;
     private final JsonUtil jsonUtil;
 
-    public String greeting(Long characterId) {
-        PlayGreetingResponse response = matchService.greeting(characterId);
+    public String greeting(Long characterId, Long matchId) {
+        PlayGreetingResponse response = matchService.greeting(characterId, matchId);
         return jsonUtil.toJson(response);
     }
 

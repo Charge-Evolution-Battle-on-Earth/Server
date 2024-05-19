@@ -190,11 +190,17 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional(readOnly = true)
-    public PlayGreetingResponse greeting(Long characterId) {
+    public PlayGreetingResponse greeting(Long characterId, Long matchId) {
+        MatchRoom matchRoom = matchRoomRepository.findById(matchId)
+            .orElseThrow(() -> new MatchRoomNotFoundException(matchId));
+
+        Character host = matchRoom.getHost();
+        Character entrant = matchRoom.getEntrant();
+
         Character character = characterRepository.findById(characterId)
             .orElseThrow(() -> new CharacterNotFoundException(characterId));
         return new PlayGreetingResponse(character.getUser().getNickname(),
-            character.getJob().getJobId(), character.getJob().getJobNm());
+            host, entrant);
     }
 
     @Override

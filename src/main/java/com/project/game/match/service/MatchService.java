@@ -30,7 +30,7 @@ public interface MatchService {
 
     PlayReadyResponse ready(Long characterId, Long matchId, PlayReadyRequest playReadyRequest);
 
-    PlayGreetingResponse greeting(Long characterId);
+    PlayGreetingResponse greeting(Long characterId, Long matchId);
 
     PlayStartResponse start(Long characterId, Long matchId);
 

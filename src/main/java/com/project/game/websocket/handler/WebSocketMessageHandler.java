@@ -78,7 +78,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
         //message routing
         switch (webSocketCommand) {
             case GREETING -> {
-                responseMessage = playController.greeting(characterId);
+                responseMessage = playController.greeting(characterId, matchId);
             }
             case READY -> {
                 PlayReadyRequest playReadyRequest = jsonUtil.fromJson(request,

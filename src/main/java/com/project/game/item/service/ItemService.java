@@ -4,6 +4,7 @@ import com.project.game.item.dto.ItemBuyRequest;
 import com.project.game.item.dto.ItemBuyResponse;
 import com.project.game.item.dto.ItemEquipRequest;
 import com.project.game.item.dto.ItemEquipResponse;
+import com.project.game.item.dto.ItemEquippedGetResponse;
 import com.project.game.item.dto.ItemGetResponse;
 import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
@@ -26,4 +27,6 @@ public interface ItemService {
     void unequipItem(Long characterId, ItemUnEquipRequest itemUnEquipRequest);
 
     ItemSellResponse sellItem(Long characterId, ItemSellRequest itemSellRequest);
+
+    ItemEquippedGetResponse getEquippedItem(Long characterId, Long itemTypeId);
 }

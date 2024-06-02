@@ -14,6 +14,7 @@ import com.project.game.item.dto.ItemBuyRequest;
 import com.project.game.item.dto.ItemBuyResponse;
 import com.project.game.item.dto.ItemEquipRequest;
 import com.project.game.item.dto.ItemEquipResponse;
+import com.project.game.item.dto.ItemEquippedGetResponse;
 import com.project.game.item.dto.ItemGetResponse;
 import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
@@ -188,5 +189,17 @@ public class ItemServiceImpl implements ItemService {
         characterItemRepository.delete(characterItem);
 
         return new ItemSellResponse(character);
+    }
+
+    @Override
+    public ItemEquippedGetResponse getEquippedItem(Long characterId, Long itemTypeId) {
+        Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
+            characterId, itemTypeId);
+        
+        if (equippedItem.isPresent()) {
+            return new ItemEquippedGetResponse(equippedItem.get().getCharacterItemEquipId());
+        }
+
+        return new ItemEquippedGetResponse(null);
     }
 }

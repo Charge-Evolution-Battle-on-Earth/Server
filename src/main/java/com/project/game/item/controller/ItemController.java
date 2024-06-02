@@ -4,6 +4,7 @@ import com.project.game.item.dto.ItemBuyRequest;
 import com.project.game.item.dto.ItemBuyResponse;
 import com.project.game.item.dto.ItemEquipRequest;
 import com.project.game.item.dto.ItemEquipResponse;
+import com.project.game.item.dto.ItemEquippedGetResponse;
 import com.project.game.item.dto.ItemGetResponse;
 import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
@@ -81,6 +82,19 @@ public class ItemController {
             itemTypeId);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 장착 중인 아이템 조회
+     */
+    @GetMapping("/inven/equipped-item/{itemTypeId}")
+    private ResponseEntity<ItemEquippedGetResponse> getEquippedItem(
+        Authentication authentication, @PathVariable Long itemTypeId) {
+        Long characterId = Long.valueOf(authentication.getName());
+
+        ItemEquippedGetResponse response = itemService.getEquippedItem(characterId, itemTypeId);
+        return ResponseEntity.ok(response);
+    }
+
 
     /**
      * 아이템 장착

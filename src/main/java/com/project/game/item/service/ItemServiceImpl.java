@@ -195,11 +195,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemEquippedGetResponse getEquippedItem(Long characterId, Long itemTypeId) {
         Optional<CharacterItemEquip> equippedItem = characterItemEquipRepository.findByCharacterCharacterIdAndItemTypeItemTypeId(
             characterId, itemTypeId);
-        
-        if (equippedItem.isPresent()) {
-            return new ItemEquippedGetResponse(equippedItem.get().getCharacterItemEquipId());
-        }
 
-        return new ItemEquippedGetResponse(null);
+        return equippedItem.map(CharacterItemEquip::getCharacterItem)
+            .map(characterItem -> new ItemEquippedGetResponse(characterItem.getCharacterItemId()))
+            .orElse(new ItemEquippedGetResponse(null));
+
     }
 }

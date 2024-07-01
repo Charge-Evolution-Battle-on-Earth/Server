@@ -10,6 +10,7 @@ import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
 import com.project.game.item.dto.ItemSellResponse;
 import com.project.game.item.dto.ItemUnEquipRequest;
+import com.project.game.item.dto.ItemUpsertRequest;
 import java.util.List;
 
 public interface ItemService {
@@ -29,4 +30,8 @@ public interface ItemService {
     ItemSellResponse sellItem(Long characterId, ItemSellRequest itemSellRequest);
 
     ItemEquippedGetResponse getEquippedItem(Long characterId, Long itemTypeId);
+
+    List<ItemGetResponse> getAllItemList();
+
+    void updateItem(ItemUpsertRequest dto);
 }

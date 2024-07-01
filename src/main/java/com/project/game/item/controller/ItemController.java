@@ -10,6 +10,7 @@ import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
 import com.project.game.item.dto.ItemSellResponse;
 import com.project.game.item.dto.ItemUnEquipRequest;
+import com.project.game.item.dto.ItemUpsertRequest;
 import com.project.game.item.service.ItemService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemController {
 
     private final ItemService itemService;
+
+    @GetMapping
+    private ResponseEntity<List<ItemGetResponse>> findAllItemList() {
+        List<ItemGetResponse> response = itemService.getAllItemList();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping
+    private ResponseEntity<Void> updateItem(@RequestBody ItemUpsertRequest dto) {
+        itemService.updateItem(dto);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/{itemId}")
     private ResponseEntity<ItemGetResponse> findItem(@PathVariable Long itemId) {

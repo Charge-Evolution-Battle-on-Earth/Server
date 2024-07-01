@@ -4,6 +4,7 @@ import com.project.game.skill.domain.SkillEffect;
 import com.project.game.skill.dto.SkillEffectGetListResponse;
 import com.project.game.skill.dto.SkillEffectGetResponse;
 import com.project.game.skill.dto.SkillEffectUpsertRequest;
+import com.project.game.skill.exception.SkillEffectNotFoundException;
 import com.project.game.skill.repository.SkillEffectRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class SkillEffectServiceImpl implements SkillEffectService {
     @Transactional
     public void update(SkillEffectUpsertRequest dto) {
         SkillEffect skillEffect = skillEffectRepository.findById(dto.skillEffectId())
-            .orElseThrow(RuntimeException::new);
+            .orElseThrow(SkillEffectNotFoundException::new);
         skillEffect.updateFixedValue(dto.fixedValue());
         skillEffect.updateStatRate(dto.statRate());
     }

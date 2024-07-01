@@ -20,6 +20,7 @@ import com.project.game.item.dto.ItemInvenGetResponse;
 import com.project.game.item.dto.ItemSellRequest;
 import com.project.game.item.dto.ItemSellResponse;
 import com.project.game.item.dto.ItemUnEquipRequest;
+import com.project.game.item.dto.ItemUpsertRequest;
 import com.project.game.item.exception.ItemNotFoundException;
 import com.project.game.item.exception.ItemTypeInvalidException;
 import com.project.game.item.exception.ItemTypeNotFoundException;
@@ -200,5 +201,19 @@ public class ItemServiceImpl implements ItemService {
             .map(characterItem -> new ItemEquippedGetResponse(characterItem.getCharacterItemId()))
             .orElse(new ItemEquippedGetResponse(null));
 
+    }
+
+    @Override
+    public List<ItemGetResponse> getAllItemList() {
+        List<Item> items = itemRepository.findAll();
+        return items.stream().map(ItemGetResponse::new).toList();
+    }
+
+    @Override
+    @Transactional
+    public void updateItem(ItemUpsertRequest dto) {
+        Item item = itemRepository.findById(dto.itemId()).orElseThrow(ItemNotFoundException::new);
+        item.updateCost(dto.cost());
+        item.updateStat(dto.stat());
     }
 }

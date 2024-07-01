@@ -51,6 +51,15 @@ public class Item extends BaseEntity {
 
     private String imageUrl;
 
+    public void updateCost(Integer cost) {
+        this.cost = cost;
+    }
+
+    public void updateStat(Stat stat) {
+        this.stat = stat;
+    }
+
+
     @Builder
     public Item(Long levelId, Job job, ItemType itemType, String itemNm, Integer cost, Stat stat,
         String description, String imageUrl) {

@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -74,4 +75,21 @@ public class SkillEffect extends BaseEntity {
         return (int) Math.round(value);
     }
 
+    public void updateFixedValue(Integer fixedValue) {
+        this.fixedValue = fixedValue;
+    }
+
+    public void updateStatRate(StatRate statRate) {
+        this.statRate = statRate;
+    }
+
+    @Builder
+    public SkillEffect(Long skillEffectId, Skill skill, SkillEffectType skillEffectType,
+        Integer fixedValue, StatRate statRate) {
+        this.skillEffectId = skillEffectId;
+        this.skill = skill;
+        this.skillEffectType = skillEffectType;
+        this.fixedValue = fixedValue;
+        this.statRate = statRate;
+    }
 }

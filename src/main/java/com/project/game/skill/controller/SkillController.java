@@ -36,7 +36,7 @@ public class SkillController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping
+    @PutMapping("/effects")
     private ResponseEntity<Void> updateSkillEffect(@RequestBody SkillEffectUpsertRequest dto) {
         skillEffectService.update(dto);
         return ResponseEntity.noContent().build();

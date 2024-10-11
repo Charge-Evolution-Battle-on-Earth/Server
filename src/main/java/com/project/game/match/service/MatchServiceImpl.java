@@ -45,7 +45,7 @@ import com.project.game.play.dto.PlayTurnRequest;
 import com.project.game.play.dto.PlayTurnResponse;
 import com.project.game.skill.domain.Skill;
 import com.project.game.skill.domain.SkillEffect;
-import com.project.game.skill.dto.SkillNotFoundException;
+import com.project.game.skill.exception.SkillNotFoundException;
 import com.project.game.skill.repository.SkillEffectRepository;
 import com.project.game.skill.repository.SkillRepository;
 import com.project.game.websocket.WebSocketSessionManager;

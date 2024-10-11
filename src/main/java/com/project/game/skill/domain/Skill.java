@@ -27,6 +27,9 @@ public class Skill extends BaseEntity {
     private Long nationId;
 
     @Column(nullable = false)
+    private String skillType;
+
+    @Column(nullable = false)
     private String skillNm;
 
     @Column(name = "mana_cost")
@@ -35,11 +38,12 @@ public class Skill extends BaseEntity {
     private String description;
 
     @Builder
-    public Skill(Long levelId, Long nationId, String skillNm, Integer manaCost,
+    public Skill(Long levelId, Long nationId, String skillNm, String skillType, Integer manaCost,
         String description) {
         this.levelId = levelId;
         this.nationId = nationId;
         this.skillNm = skillNm;
+        this.skillType = skillType;
         this.manaCost = manaCost;
         this.description = description;
     }

@@ -1,4 +1,4 @@
-package com.project.game.skill.dto;
+package com.project.game.skill.exception;
 
 import com.project.game.common.exception.EntityNotFoundException;
 

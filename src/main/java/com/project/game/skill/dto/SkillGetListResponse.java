@@ -9,6 +9,7 @@ public class SkillGetListResponse {
     private Long skillId;
     private Long levelId;
     private Long nationId;
+    private String skillType;
     private String skillNm;
     private String description;
 
@@ -16,6 +17,7 @@ public class SkillGetListResponse {
         this.skillId = skill.getSkillId();
         this.levelId = skill.getLevelId();
         this.nationId = skill.getNationId();
+        this.skillType = skill.getSkillType();
         this.skillNm = skill.getSkillNm();
         this.description = skill.getDescription();
     }

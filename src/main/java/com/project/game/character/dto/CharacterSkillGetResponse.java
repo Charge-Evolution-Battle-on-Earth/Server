@@ -7,6 +7,7 @@ import lombok.Getter;
 public class CharacterSkillGetResponse {
 
     private Long skillId;
+    private String skillType;
     private String skillNm;
     private Integer manaCost;
     private String description;
@@ -14,6 +15,7 @@ public class CharacterSkillGetResponse {
     public CharacterSkillGetResponse(Skill skill) {
         this.skillId = skill.getSkillId();
         this.skillNm = skill.getSkillNm();
+        this.skillType = skill.getSkillType();
         this.manaCost = skill.getManaCost();
         this.description = skill.getDescription();
     }
